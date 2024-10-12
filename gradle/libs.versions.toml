@@ -8,6 +8,9 @@ com-zaxxer-hikaricp = "4.0.3"
 me-clip-placeholderapi = "2.11.6"
 org-jetbrains-annotations = "23.0.0"
 org-spigotmc-spigot-api = "1.21-R0.1-SNAPSHOT"
+org-xerial-sqlite-jdbc = "3.41.2.2"
+org-mariadb-jdbc-mariadb-java-client = "3.1.2"
+
 
 [libraries]
 com-comphenix-protocol-protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "com-comphenix-protocol-protocollib" }
@@ -16,3 +19,5 @@ com-zaxxer-hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "com-zaxxe
 me-clip-placeholderapi = { module = "me.clip:placeholderapi", version.ref = "me-clip-placeholderapi" }
 org-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "org-jetbrains-annotations" }
 org-spigotmc-spigot-api = { module = "org.spigotmc:spigot-api", version.ref = "org-spigotmc-spigot-api" }
+org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org-xerial-sqlite-jdbc" }
+org-mariadb-jdbc-mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "org-mariadb-jdbc-mariadb-java-client" }

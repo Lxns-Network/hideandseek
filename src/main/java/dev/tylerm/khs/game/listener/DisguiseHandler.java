@@ -13,6 +13,8 @@ import dev.tylerm.khs.game.util.Disguise;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -74,6 +76,7 @@ public class DisguiseHandler implements Listener {
 
     private final List<Player> debounce = new ArrayList<>();
 
+    @SuppressWarnings("removal")
     private void handleAttack(Disguise disguise, Player seeker) {
 
         if (disguise.getPlayer() == seeker) return;
@@ -87,7 +90,11 @@ public class DisguiseHandler implements Listener {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
             EntityDamageByEntityEvent event =
-                    new EntityDamageByEntityEvent(seeker, disguise.getPlayer(), EntityDamageEvent.DamageCause.ENTITY_ATTACK, amount);
+                    new EntityDamageByEntityEvent(seeker, disguise.getPlayer(),
+                            EntityDamageEvent.DamageCause.ENTITY_ATTACK,
+                            DamageSource.builder(DamageType.PLAYER_ATTACK)
+                                    .build(),
+                            amount);
             event.setDamage(amount);
             disguise.getPlayer().setLastDamageCause(event);
             Main.getInstance().getServer().getPluginManager().callEvent(event);
