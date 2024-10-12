@@ -15,6 +15,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import static dev.tylerm.khs.configuration.Config.*;
 import static dev.tylerm.khs.configuration.Localization.message;
@@ -80,6 +82,12 @@ public class DamageHandler implements Listener {
         if (board.contains(player) && game.getStatus() != Status.PLAYING) {
             event.setCancelled(true);
             return;
+        }
+        if (blindnessWhenHit > 0 && pvpEnabled
+                && board.isSeeker(player) &&
+                attacker != null && board.isHider(attacker)) {
+            // icybear: give hider blindness effect when hit
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, blindnessWhenHit, 1));
         }
         // Check if player dies (pvp mode)
         if (pvpEnabled && player.getHealth() - event.getFinalDamage() >= 0.5) return;

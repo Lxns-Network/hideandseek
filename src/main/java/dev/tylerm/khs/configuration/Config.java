@@ -74,6 +74,7 @@ public class Config {
             minPlayers,
             gameLength,
             extendPerKill,
+            blindnessWhenHit,
             tauntDelay,
             glowLength,
             countdown,
@@ -153,6 +154,7 @@ public class Config {
         tauntLast = config.getBoolean("taunt.whenLastPerson");
 
         //Glow
+        blindnessWhenHit = config.getInt("blindnessWhenHit");
         alwaysGlow = config.getBoolean("alwaysGlow");
         glowLength = Math.max(1, config.getInt("glow.time"));
         glowStackable = config.getBoolean("glow.stackable");
