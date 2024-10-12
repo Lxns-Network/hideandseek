@@ -7,7 +7,7 @@ plugins {
 group = 'dev.tylerm'
 version = '1.7.6'
 description = 'Hide and Seek Plugin'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenLocal()

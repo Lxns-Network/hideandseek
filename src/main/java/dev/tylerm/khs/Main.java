@@ -209,7 +209,6 @@ public class Main extends JavaPlugin implements Listener {
         matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(Bukkit.getVersion());
 		if (matcher.find()) {
 			int version = Integer.parseInt(matcher.group(1));
-			int sub_version = 0;
             getLogger().info("Identified server version: " + version);
 			if(version < 18){
 				throw new IllegalStateException("Minecraft version below 1.18 is unsupported by this fork.");
