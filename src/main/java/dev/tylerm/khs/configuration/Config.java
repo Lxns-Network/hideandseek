@@ -73,6 +73,7 @@ public class Config {
     public static int
             minPlayers,
             gameLength,
+            extendPerKill,
             tauntDelay,
             glowLength,
             countdown,
@@ -187,6 +188,7 @@ public class Config {
         nameTagsVisible = config.getBoolean("nametagsVisible");
         permissionsRequired = config.getBoolean("permissionsRequired");
         gameLength = config.getInt("gameLength");
+        extendPerKill = config.getInt("extendPerKill");
         pvpEnabled = config.getBoolean("pvp");
         allowNaturalCauses = config.getBoolean("allowNaturalCauses");
         autoJoin = config.getBoolean("autoJoin");

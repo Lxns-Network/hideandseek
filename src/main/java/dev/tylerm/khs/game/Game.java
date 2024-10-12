@@ -86,6 +86,10 @@ public class Game {
 		return gameTimer;
 	}
 
+	public void extendTime(){
+		gameTimer += extendPerKill;
+	}
+
 	public int getLobbyTime(){
 		return lobbyTimer;
 	}

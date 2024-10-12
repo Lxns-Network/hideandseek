@@ -108,10 +108,14 @@ public class DamageHandler implements Listener {
         if (board.isSeeker(player)) {
             game.broadcastMessage(message("GAME_PLAYER_DEATH").addPlayer(player).toString());
         } else if (board.isHider(player)) {
+            // icybear: update the timer
+            game.extendTime();
             if (attacker == null) {
-                game.broadcastMessage(message("GAME_PLAYER_FOUND").addPlayer(player).toString());
+                game.broadcastMessage(message("GAME_PLAYER_FOUND")
+                        .addPlayer(player).addAmount(extendPerKill).toString());
             } else {
-                game.broadcastMessage(message("GAME_PLAYER_FOUND_BY").addPlayer(player).addPlayer(attacker).toString());
+                game.broadcastMessage(message("GAME_PLAYER_FOUND_BY")
+                        .addPlayer(player).addPlayer(attacker).addAmount(extendPerKill).toString());
             }
             if (respawnAsSpectator) {
                 board.addSpectator(player);

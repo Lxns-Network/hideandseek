@@ -12,8 +12,11 @@
 spawnPatch: false
 
 # How long in seconds will the game last, set it < 1 to disable
-# default: 1200 aka 20min
-gameLength: 1200
+# default: 300 aka 5min
+gameLength: 300
+
+# How long will be added into the timer when a seeker is found
+extendPerKill: 30
 
 # How long in seconds will the initial hiding period last, minimum is 10 seconds
 # default: 30
