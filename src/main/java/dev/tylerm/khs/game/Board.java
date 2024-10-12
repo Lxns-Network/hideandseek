@@ -36,14 +36,14 @@ public class Board {
 
     public boolean containsUUID(UUID uuid) {
         return Players.containsKey(uuid);
-    } 
+    }
 
     public boolean isHider(Player player) {
         return isHider(player.getUniqueId());
     }
 
     public boolean isHider(UUID uuid) {
-        if(!Players.containsKey(uuid)) return false;
+        if (!Players.containsKey(uuid)) return false;
         return Players.get(uuid) == Type.HIDER;
     }
 
@@ -52,7 +52,7 @@ public class Board {
     }
 
     public boolean isSeeker(UUID uuid) {
-        if(!Players.containsKey(uuid)) return false;
+        if (!Players.containsKey(uuid)) return false;
         return Players.get(uuid) == Type.SEEKER;
     }
 
@@ -61,7 +61,7 @@ public class Board {
     }
 
     public boolean isSpectator(UUID uuid) {
-        if(!Players.containsKey(uuid)) return false;
+        if (!Players.containsKey(uuid)) return false;
         return Players.get(uuid) == Type.SPECTATOR;
     }
 
@@ -113,14 +113,14 @@ public class Board {
     }
 
     public List<Player> getInitialSeekers() {
-        if(initialSeekers == null) return null;
+        if (initialSeekers == null) return null;
         return initialSeekers.stream().map(u -> {
             return Bukkit.getPlayer(u);
         }).collect(Collectors.toList());
     }
 
     public Player getPlayer(UUID uuid) {
-        if(!Players.containsKey(uuid)) {
+        if (!Players.containsKey(uuid)) {
             return null;
         }
         return Bukkit.getPlayer(uuid);
@@ -155,20 +155,20 @@ public class Board {
     }
 
     public void addKill(UUID uuid) {
-        if(Players.get(uuid) == Type.HIDER) {
+        if (Players.get(uuid) == Type.HIDER) {
             int kills = hider_kills.getOrDefault(uuid, 0);
             hider_kills.put(uuid, kills + 1);
-        } else if(Players.get(uuid) == Type.SEEKER) {
+        } else if (Players.get(uuid) == Type.SEEKER) {
             int kills = seeker_kills.getOrDefault(uuid, 0);
             seeker_kills.put(uuid, kills + 1);
         }
     }
 
     public void addDeath(UUID uuid) {
-        if(Players.get(uuid) == Type.HIDER) {
+        if (Players.get(uuid) == Type.HIDER) {
             int kills = hider_deaths.getOrDefault(uuid, 0);
             hider_deaths.put(uuid, kills + 1);
-        } else if(Players.get(uuid) == Type.SEEKER) {
+        } else if (Players.get(uuid) == Type.SEEKER) {
             int kills = seeker_deaths.getOrDefault(uuid, 0);
             seeker_deaths.put(uuid, kills + 1);
         }
@@ -200,8 +200,8 @@ public class Board {
             board = new CustomBoard(player, LOBBY_TITLE);
             board.updateTeams();
         }
-        int i=0;
-        for(String line : LOBBY_CONTENTS) {
+        int i = 0;
+        for (String line : LOBBY_CONTENTS) {
             if (line.equalsIgnoreCase("")) {
                 board.addBlank();
             } else if (line.contains("{COUNTDOWN}")) {
@@ -210,12 +210,12 @@ public class Board {
                 } else if (Main.getInstance().getGame().getLobbyTime() == -1) {
                     board.setLine(String.valueOf(i), line.replace("{COUNTDOWN}", COUNTDOWN_WAITING));
                 } else {
-                    board.setLine(String.valueOf(i), line.replace("{COUNTDOWN}", COUNTDOWN_COUNTING.replace("{AMOUNT}",Main.getInstance().getGame().getLobbyTime()+"")));
+                    board.setLine(String.valueOf(i), line.replace("{COUNTDOWN}", COUNTDOWN_COUNTING.replace("{AMOUNT}", Main.getInstance().getGame().getLobbyTime() + "")));
                 }
             } else if (line.contains("{COUNT}")) {
-                board.setLine(String.valueOf(i), line.replace("{COUNT}", getPlayers().size()+""));
+                board.setLine(String.valueOf(i), line.replace("{COUNT}", getPlayers().size() + ""));
             } else if (line.contains("{SEEKER%}")) {
-                board.setLine(String.valueOf(i), line.replace("{SEEKER%}", getSeekerPercent()+""));
+                board.setLine(String.valueOf(i), line.replace("{SEEKER%}", getSeekerPercent() + ""));
             } else if (line.contains("{HIDER%}")) {
                 board.setLine(String.valueOf(i), line.replace("{HIDER%}", getHiderPercent() + ""));
             } else if (line.contains("{MAP}")) {
@@ -231,7 +231,7 @@ public class Board {
 
     public String getMapName() {
         dev.tylerm.khs.configuration.Map map = Main.getInstance().getGame().getCurrentMap();
-        if(map == null) return "Invalid";
+        if (map == null) return "Invalid";
         else return map.getName();
     }
 
@@ -254,12 +254,12 @@ public class Board {
         Glow glow = Main.getInstance().getGame().getGlow();
 
         int i = 0;
-        for(String line : GAME_CONTENTS) {
+        for (String line : GAME_CONTENTS) {
             if (line.equalsIgnoreCase("")) {
                 board.addBlank();
             } else {
                 if (line.contains("{TIME}")) {
-                    String value = timeLeft/60 + "m" + timeLeft%60 + "s";
+                    String value = timeLeft / 60 + "m" + timeLeft % 60 + "s";
                     board.setLine(String.valueOf(i), line.replace("{TIME}", value));
                 } else if (line.contains("{TEAM}")) {
                     String value = getTeam(player);
@@ -269,7 +269,7 @@ public class Board {
                     if (status == Status.STARTING) {
                         board.setLine(String.valueOf(i), line.replace("{BORDER}", BORDER_COUNTING.replace("{AMOUNT}", "0")));
                     } else if (!worldBorder.isRunning()) {
-                        board.setLine(String.valueOf(i), line.replace("{BORDER}", BORDER_COUNTING.replaceFirst("\\{AMOUNT}", worldBorder.getDelay()/60+"").replaceFirst("\\{AMOUNT}", worldBorder.getDelay()%60+"")));
+                        board.setLine(String.valueOf(i), line.replace("{BORDER}", BORDER_COUNTING.replaceFirst("\\{AMOUNT}", worldBorder.getDelay() / 60 + "").replaceFirst("\\{AMOUNT}", worldBorder.getDelay() % 60 + "")));
                     } else {
                         board.setLine(String.valueOf(i), line.replace("{BORDER}", BORDER_DECREASING));
                     }
@@ -285,16 +285,16 @@ public class Board {
                         board.setLine(String.valueOf(i), line.replace("{TAUNT}", TAUNT_ACTIVE));
                     }
                 } else if (line.contains("{GLOW}")) {
-                    if (!glowEnabled)  continue;
+                    if (!glowEnabled) continue;
                     if (glow == null || status == Status.STARTING || !glow.isRunning()) {
                         board.setLine(String.valueOf(i), line.replace("{GLOW}", GLOW_INACTIVE));
                     } else {
                         board.setLine(String.valueOf(i), line.replace("{GLOW}", GLOW_ACTIVE));
                     }
                 } else if (line.contains("{#SEEKER}")) {
-                    board.setLine(String.valueOf(i), line.replace("{#SEEKER}", getSeekers().size()+""));
+                    board.setLine(String.valueOf(i), line.replace("{#SEEKER}", getSeekers().size() + ""));
                 } else if (line.contains("{#HIDER}")) {
-                    board.setLine(String.valueOf(i), line.replace("{#HIDER}", getHiders().size()+""));
+                    board.setLine(String.valueOf(i), line.replace("{#HIDER}", getHiders().size() + ""));
                 } else if (line.contains("{MAP}")) {
                     board.setLine(String.valueOf(i), line.replace("{MAP}", getMapName() + ""));
                 } else {
@@ -315,17 +315,17 @@ public class Board {
     }
 
     public void reloadLobbyBoards() {
-        for(Player player : getPlayers())
+        for (Player player : getPlayers())
             createLobbyBoard(player, false);
     }
 
     public void reloadGameBoards() {
-        for(Player player : getPlayers())
+        for (Player player : getPlayers())
             createGameBoard(player, false);
     }
 
     public void reloadBoardTeams() {
-        for(CustomBoard board : customBoards.values())
+        for (CustomBoard board : customBoards.values())
             board.updateTeams();
     }
 
@@ -334,7 +334,7 @@ public class Board {
         if (size < 2)
             return " --";
         else
-            return " "+(int)(100*(1.0/size));
+            return " " + (int) (100 * (1.0 / size));
     }
 
     private String getHiderPercent() {
@@ -342,7 +342,7 @@ public class Board {
         if (size < 2)
             return " --";
         else
-            return " "+(int)(100-100*(1.0/size));
+            return " " + (int) (100 - 100 * (1.0 / size));
     }
 
     private String getTeam(Player player) {
@@ -353,7 +353,8 @@ public class Board {
     }
 
     public void cleanup() {
-        Players.clear();;
+        Players.clear();
+        ;
         initialSeekers = null;
         customBoards.clear();
     }
@@ -366,7 +367,7 @@ class CustomBoard {
     private final Scoreboard board;
     private final Objective obj;
     private final Player player;
-    private final Map<String,Line> LINES;
+    private final Map<String, Line> LINES;
     private int blanks;
     private boolean displayed;
 
@@ -376,52 +377,43 @@ class CustomBoard {
         this.board = manager.getNewScoreboard();
         this.LINES = new HashMap<>();
         this.player = player;
-        if (Main.getInstance().supports(13)) {
-            this.obj = board.registerNewObjective(
-                    "Scoreboard", "dummy", ChatColor.translateAlternateColorCodes('&', title));
-        } else {
-            this.obj = board.registerNewObjective("Scoreboard", "dummy");
-            this.obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', title));
-        }
+        this.obj = board.registerNewObjective(
+                "Scoreboard", "dummy", ChatColor.translateAlternateColorCodes('&', title));
         this.blanks = 0;
         this.displayed = false;
         this.updateTeams();
     }
 
     public void updateTeams() {
-        try{ board.registerNewTeam("Hider"); } catch (Exception ignored) {}
-        try{ board.registerNewTeam("Seeker"); } catch (Exception ignored) {}
+        try {
+            board.registerNewTeam("Hider");
+        } catch (Exception ignored) {
+        }
+        try {
+            board.registerNewTeam("Seeker");
+        } catch (Exception ignored) {
+        }
         Team hiderTeam = board.getTeam("Hider");
         assert hiderTeam != null;
-        for(String entry : hiderTeam.getEntries())
+        for (String entry : hiderTeam.getEntries())
             hiderTeam.removeEntry(entry);
-        for(Player player : Main.getInstance().getBoard().getHiders())
+        for (Player player : Main.getInstance().getBoard().getHiders())
             hiderTeam.addEntry(player.getName());
         Team seekerTeam = board.getTeam("Seeker");
         assert seekerTeam != null;
-        for(String entry : seekerTeam.getEntries())
+        for (String entry : seekerTeam.getEntries())
             seekerTeam.removeEntry(entry);
-        for(Player player  : Main.getInstance().getBoard().getSeekers())
+        for (Player player : Main.getInstance().getBoard().getSeekers())
             seekerTeam.addEntry(player.getName());
-        if (Main.getInstance().supports(9)) {
-            if (nameTagsVisible) {
-                hiderTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
-                seekerTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OTHER_TEAMS);
-            } else {
-                hiderTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-                seekerTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-            }
-            hiderTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-            seekerTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        if (nameTagsVisible) {
+            hiderTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
+            seekerTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OTHER_TEAMS);
         } else {
-            if (nameTagsVisible) {
-                hiderTeam.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
-                seekerTeam.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OWN_TEAM);
-            } else {
-                hiderTeam.setNameTagVisibility(NameTagVisibility.NEVER);
-                seekerTeam.setNameTagVisibility(NameTagVisibility.NEVER);
-            }
+            hiderTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+            seekerTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         }
+        hiderTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        seekerTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         hiderTeam.setPrefix(message("HIDER_TEAM_NAME").toString() + " " + ChatColor.RESET);
         seekerTeam.setPrefix(message("SEEKER_TEAM_NAME").toString() + " " + ChatColor.RESET);
     }
@@ -429,25 +421,25 @@ class CustomBoard {
     public void setLine(String key, String message) {
         Line line = LINES.get(key);
         if (line == null)
-            addLine(key, ChatColor.translateAlternateColorCodes('&',message));
+            addLine(key, ChatColor.translateAlternateColorCodes('&', message));
         else
-            updateLine(key, ChatColor.translateAlternateColorCodes('&',message));
+            updateLine(key, ChatColor.translateAlternateColorCodes('&', message));
     }
 
     private void addLine(String key, String message) {
         Score score = obj.getScore(message);
-        score.setScore(LINES.values().size()+1);
-        Line line = new Line(LINES.values().size()+1, message);
+        score.setScore(LINES.values().size() + 1);
+        Line line = new Line(LINES.values().size() + 1, message);
         LINES.put(key, line);
     }
 
     public void addBlank() {
         if (displayed) return;
         StringBuilder temp = new StringBuilder();
-        for(int i = 0; i <= blanks; i ++)
+        for (int i = 0; i <= blanks; i++)
             temp.append(ChatColor.RESET);
         blanks++;
-        addLine("blank"+blanks, temp.toString());
+        addLine("blank" + blanks, temp.toString());
     }
 
     private void updateLine(String key, String message) {

@@ -31,7 +31,9 @@ public class DamageHandler implements Listener {
         Player player = (Player) event.getEntity();
         Player attacker = null;
         // If map is not setup we won't be able to process on it :o
-        if (!game.isCurrentMapValid()) { return; }
+        if (!game.isCurrentMapValid()) {
+            return;
+        }
         // If there is an attacker, find them
         if (event instanceof EntityDamageByEntityEvent) {
             if (((EntityDamageByEntityEvent) event).getDamager() instanceof Player)
@@ -58,10 +60,10 @@ public class DamageHandler implements Listener {
                 event.setCancelled(true);
                 return;
             }
-        // If there was no attacker, if the damaged is not a player, ignore them.
+            // If there was no attacker, if the damaged is not a player, ignore them.
         } else if (!board.contains(player)) {
             return;
-        // If there is no attacker, it most of been by natural causes. If pvp is disabled, and config doesn't allow natural causes, cancel event.
+            // If there is no attacker, it most of been by natural causes. If pvp is disabled, and config doesn't allow natural causes, cancel event.
         } else if (!pvpEnabled && !allowNaturalCauses && board.contains(player)) {
             event.setCancelled(true);
             return;
@@ -69,36 +71,30 @@ public class DamageHandler implements Listener {
         // Spectators and cannot take damage
         if (board.isSpectator(player)) {
             event.setCancelled(true);
-            if (Main.getInstance().supports(18) && player.getLocation().getBlockY() < -64) {
-                game.getCurrentMap().getGameSpawn().teleport(player);
-            } else if (!Main.getInstance().supports(18) && player.getLocation().getY() < 0) {
+            if (player.getLocation().getBlockY() < -64) {
                 game.getCurrentMap().getGameSpawn().teleport(player);
             }
             return;
         }
         // Players cannot take damage while game is not in session
-        if (board.contains(player) && game.getStatus() != Status.PLAYING){
+        if (board.contains(player) && game.getStatus() != Status.PLAYING) {
             event.setCancelled(true);
             return;
         }
         // Check if player dies (pvp mode)
-        if(pvpEnabled && player.getHealth() - event.getFinalDamage() >= 0.5) return;
+        if (pvpEnabled && player.getHealth() - event.getFinalDamage() >= 0.5) return;
         // Handle death event
         event.setCancelled(true);
         // Play death effect
-        if (Main.getInstance().supports(9)) {
-            XSound.ENTITY_PLAYER_DEATH.play(player, 1, 1);
-        } else {
-            XSound.ENTITY_PLAYER_HURT.play(player, 1, 1);
-        }
+        XSound.ENTITY_PLAYER_DEATH.play(player, 1, 1);
         // Reveal player if they are disguised
         Main.getInstance().getDisguiser().reveal(player);
         // Teleport player to seeker spawn
-        if(delayedRespawn && !respawnAsSpectator){
+        if (delayedRespawn && !respawnAsSpectator) {
             game.getCurrentMap().getGameSeekerLobby().teleport(player);
             player.sendMessage(messagePrefix + message("RESPAWN_NOTICE").addAmount(delayedRespawnDelay));
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
-                if(game.getStatus() == Status.PLAYING){
+                if (game.getStatus() == Status.PLAYING) {
                     game.getCurrentMap().getGameSpawn().teleport(player);
                 }
             }, delayedRespawnDelay * 20L);
@@ -129,7 +125,7 @@ public class DamageHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerDeath(PlayerDeathEvent event){
+    public void onPlayerDeath(PlayerDeathEvent event) {
         Main.getInstance().getDisguiser().reveal(event.getEntity());
     }
 

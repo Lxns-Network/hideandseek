@@ -69,7 +69,7 @@ public class Taunt {
                 delay = tauntDelay;
                 return;
             }
-            Firework fw = (Firework) world.spawnEntity(taunted.getLocation(), EntityType.FIREWORK);
+            Firework fw = (Firework) world.spawnEntity(taunted.getLocation(), EntityType.FIREWORK_ROCKET);
             FireworkMeta fwm = fw.getFireworkMeta();
             fwm.setPower(4);
             fwm.addEffect(FireworkEffect.builder()

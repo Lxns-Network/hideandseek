@@ -18,10 +18,6 @@ import java.util.stream.Collectors;
 public class Add implements ICommand {
 
     public void execute(Player sender, String[] args) {
-        if (!Main.getInstance().supports(9)) {
-            sender.sendMessage(Config.errorPrefix + Localization.message("BLOCKHUNT_UNSUPPORTED"));
-            return;
-        }
         if (Main.getInstance().getGame().getStatus() != Status.STANDBY) {
             sender.sendMessage(Config.errorPrefix + Localization.message("GAME_INPROGRESS"));
             return;

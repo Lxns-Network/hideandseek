@@ -47,20 +47,20 @@ public class InventoryHandler implements Listener {
         checkForBlockHuntMenu(event);
     }
 
-    private void checkForInventoryMove(InventoryClickEvent event){
+    private void checkForInventoryMove(InventoryClickEvent event) {
         if (Main.getInstance().getBoard().contains((Player) event.getWhoClicked()) && Main.getInstance().getGame().getStatus() == Status.STANDBY) {
             event.setCancelled(true);
         }
     }
 
-    private void checkForSpectatorTeleportMenu(InventoryClickEvent event){
+    private void checkForSpectatorTeleportMenu(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-            
+
         ItemStack item = event.getCurrentItem();
 
         ItemMeta meta = item.getItemMeta();
         String name = meta.getDisplayName();
-        
+
         if (Main.getInstance().getBoard().isSpectator(player)) {
             if (XMaterial.PLAYER_HEAD.isSimilar(item)) {
                 event.setCancelled(true);
@@ -76,70 +76,54 @@ public class InventoryHandler implements Listener {
                 try {
                     int page = Integer.parseInt(number_str);
                     InteractHandler.createSpectatorTeleportPage(player, page - 1);
-                } catch(Exception ignored) {
+                } catch (Exception ignored) {
                     return;
                 }
             }
         }
     }
 
-    private void checkForDebugMenu(InventoryClickEvent event){
+    private void checkForDebugMenu(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        boolean debug;
-        if(Main.getInstance().supports(14)){
-            debug = event.getView().getTitle().equals("Debug Menu") && player.hasPermission("hideandseek.debug");
-        } else {
-            debug = event.getInventory().getName().equals("Debug Menu") && player.hasPermission("hideandseek.debug");
-        }
-        if (debug){
+        boolean debug = event.getView().getTitle().equals("Debug Menu") && player.hasPermission("hideandseek.debug");
+        if (debug) {
             event.setCancelled(true);
             player.closeInventory();
             Debug.handleOption(player, event.getRawSlot());
         }
     }
 
-    private void checkForBlockHuntMenu(InventoryClickEvent event){
+    private void checkForBlockHuntMenu(InventoryClickEvent event) {
         boolean test;
         String mapName;
-        if(Main.getInstance().supports(14)){
-            test = event.getView().getTitle().startsWith("Select a Block: ");
-            if(!test) return;
-            mapName = event.getView().getTitle().substring("Select a Block: ".length());
-        } else {
-            test = event.getInventory().getName().startsWith("Select a Block: ");
-            if(!test) return;
-            mapName = event.getInventory().getName().substring("Select a Block: ".length());
-        }
+        test = event.getView().getTitle().startsWith("Select a Block: ");
+        if (!test) return;
+        mapName = event.getView().getTitle().substring("Select a Block: ".length());
+
         event.setCancelled(true);
         Map map = Maps.getMap(mapName);
-        if(map == null) return;
+        if (map == null) return;
         Material mat = map.getBlockHunt().get(event.getRawSlot());
-        if(mat == null) return;
+        if (mat == null) return;
         Player player = (Player) event.getWhoClicked();
         Main.getInstance().getDisguiser().disguise(player, mat, map);
         player.closeInventory();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryClose(InventoryCloseEvent event){
+    public void onInventoryClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player)) return;
         boolean test;
         String mapName;
-        if(Main.getInstance().supports(14)){
-            test = event.getView().getTitle().startsWith("Select a Block: ");
-            if(!test) return;
-            mapName = event.getView().getTitle().substring("Select a Block: ".length());
-        } else {
-            test = event.getInventory().getName().startsWith("Select a Block: ");
-            if(!test) return;
-            mapName = event.getInventory().getName().substring("Select a Block: ".length());
-        }
+        test = event.getView().getTitle().startsWith("Select a Block: ");
+        if (!test) return;
+        mapName = event.getView().getTitle().substring("Select a Block: ".length());
         Map map = Maps.getMap(mapName);
-        if(map == null) return;
+        if (map == null) return;
         Material mat = map.getBlockHunt().get(0);
-        if(mat == null) return;
+        if (mat == null) return;
         Player player = (Player) event.getPlayer();
-        if(Main.getInstance().getDisguiser().disguised(player)) return;
+        if (Main.getInstance().getDisguiser().disguised(player)) return;
         Main.getInstance().getDisguiser().disguise(player, mat, map);
         player.closeInventory();
     }

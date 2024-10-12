@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class SeekerLobby implements ICommand {

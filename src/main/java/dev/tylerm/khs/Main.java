@@ -39,8 +39,6 @@ import static dev.tylerm.khs.configuration.Localization.message;
 public class Main extends JavaPlugin implements Listener {
 	
 	private static Main instance;
-	private static int version;
-    private static int sub_version;
 
 	private Database database;
 	private Board board;
@@ -159,9 +157,6 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void onDisable() {
-
-		version = 0;
-
 		if(board != null) {
 			board.getPlayers().forEach(player -> {
 				board.removeBoard(player);
@@ -201,22 +196,24 @@ public class Main extends JavaPlugin implements Listener {
 	private void updateVersion(){
 		Matcher matcher = Pattern.compile("MC: \\d\\.(\\d+).(\\d+)").matcher(Bukkit.getVersion());
 		if (matcher.find()) {
-			version = Integer.parseInt(matcher.group(1));
-			sub_version = Integer.parseInt(matcher.group(2));
-
+			int version = Integer.parseInt(matcher.group(1));
+			int sub_version = Integer.parseInt(matcher.group(2));
             getLogger().info("Identified server version: " + version);
             getLogger().info("Identified server sub version: " + sub_version);
-
+			if(version < 18){
+				throw new IllegalStateException("Minecraft version below 1.18 is unsupported by this fork.");
+			}
             return;
         }
 
         matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(Bukkit.getVersion());
 		if (matcher.find()) {
-			version = Integer.parseInt(matcher.group(1));
-			sub_version = 0;
-            
+			int version = Integer.parseInt(matcher.group(1));
+			int sub_version = 0;
             getLogger().info("Identified server version: " + version);
-            
+			if(version < 18){
+				throw new IllegalStateException("Minecraft version below 1.18 is unsupported by this fork.");
+			}
             return;
         }
 
@@ -265,14 +262,6 @@ public class Main extends JavaPlugin implements Listener {
 	public EntityHider getEntityHider() { return entityHider; }
 
 	public CommandGroup getCommandGroup() { return commandGroup; }
-
-	public boolean supports(int v){
-		return version >= v;
-	}
-
-	public boolean supports(int v, int s){
-	    return (version == v) ? sub_version >= s : version >= v;
-	}
 
 	public java.util.List<String> getWorlds() {
 		java.util.List<String> worlds = new ArrayList<>();

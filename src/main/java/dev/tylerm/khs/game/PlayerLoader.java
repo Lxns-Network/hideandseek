@@ -41,23 +41,23 @@ import static dev.tylerm.khs.configuration.Localization.message;
 @SuppressWarnings("deprecation")
 public class PlayerLoader {
 
-    public static void loadHider(Player player, Map map){
+    public static void loadHider(Player player, Map map) {
         map.getGameSpawn().teleport(player);
         loadPlayer(player);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000,5,false,false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1000000, 5, false, false));
         Titles.sendTitle(player, 10, 70, 20, ChatColor.WHITE + "" + message("HIDER_TEAM_NAME"), ChatColor.WHITE + message("HIDERS_SUBTITLE").toString());
-        if(map.isBlockHuntEnabled()){
+        if (map.isBlockHuntEnabled()) {
             openBlockHuntPicker(player, map);
         }
     }
 
-    public static void loadSeeker(Player player, Map map){
+    public static void loadSeeker(Player player, Map map) {
         map.getGameSeekerLobby().teleport(player);
         loadPlayer(player);
         Titles.sendTitle(player, 10, 70, 20, ChatColor.WHITE + "" + message("SEEKER_TEAM_NAME"), ChatColor.WHITE + message("SEEKERS_SUBTITLE").toString());
     }
 
-    public static void loadSpectator(Player player, Map map){
+    public static void loadSpectator(Player player, Map map) {
         map.getGameSpawn().teleport(player);
         loadPlayer(player);
         player.setAllowFlight(true);
@@ -80,12 +80,12 @@ public class PlayerLoader {
         Main.getInstance().getBoard().getPlayers().forEach(otherPlayer -> otherPlayer.hidePlayer(player));
     }
 
-    public static void resetPlayer(Player player, Board board){
-        if(board.isSpectator(player)) return;
+    public static void resetPlayer(Player player, Board board) {
+        if (board.isSpectator(player)) return;
         loadPlayer(player);
         if (board.isSeeker(player)) {
             if (pvpEnabled) {
-                for(int i = 0; i < 9; i++) {
+                for (int i = 0; i < 9; i++) {
                     if (SEEKER_ITEMS.get(i) == null) continue;
                     player.getInventory().setItem(i, SEEKER_ITEMS.get(i));
                 }
@@ -98,11 +98,11 @@ public class PlayerLoader {
                 if (Items.SEEKER_BOOTS != null)
                     player.getInventory().setBoots(Items.SEEKER_BOOTS);
             }
-            for(PotionEffect effect : Items.SEEKER_EFFECTS)
+            for (PotionEffect effect : Items.SEEKER_EFFECTS)
                 player.addPotionEffect(effect);
         } else if (board.isHider(player)) {
             if (pvpEnabled) {
-                for(int i = 0; i < 9; i++) {
+                for (int i = 0; i < 9; i++) {
                     if (HIDER_ITEMS.get(i) == null) continue;
                     player.getInventory().setItem(i, HIDER_ITEMS.get(i));
                 }
@@ -115,7 +115,7 @@ public class PlayerLoader {
                 if (Items.HIDER_BOOTS != null)
                     player.getInventory().setBoots(Items.HIDER_BOOTS);
             }
-            for(PotionEffect effect : Items.HIDER_EFFECTS)
+            for (PotionEffect effect : Items.HIDER_EFFECTS)
                 player.addPotionEffect(effect);
             if (glowEnabled) {
                 player.getInventory().addItem(glowPowerupItem);
@@ -123,21 +123,17 @@ public class PlayerLoader {
         }
     }
 
-    public static void unloadPlayer(Player player){
+    public static void unloadPlayer(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
         player.getInventory().clear();
         Main.getInstance().getDisguiser().reveal(player);
-        for(PotionEffect effect : player.getActivePotionEffects()) {
+        for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
-        if (Main.getInstance().supports(9)) {
-            AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (attribute != null) player.setHealth(attribute.getValue());
-            for(Player temp : Main.getInstance().getBoard().getPlayers()) {
-                Main.getInstance().getGame().getGlow().setGlow(player, temp, false);
-            }
-        } else {
-            player.setHealth(player.getMaxHealth());
+        AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (attribute != null) player.setHealth(attribute.getValue());
+        for (Player temp : Main.getInstance().getBoard().getPlayers()) {
+            Main.getInstance().getGame().getGlow().setGlow(player, temp, false);
         }
         Main.getInstance().getBoard().getPlayers().forEach(temp -> {
             player.showPlayer(temp);
@@ -148,7 +144,7 @@ public class PlayerLoader {
         player.setFallDistance(0.0F);
     }
 
-    public static void joinPlayer(Player player, Map map){
+    public static void joinPlayer(Player player, Map map) {
         map.getLobby().teleport(player);
         loadPlayer(player);
         if (lobbyStartItem != null && (!lobbyItemStartAdmin || player.hasPermission("hideandseek.start")))
@@ -157,28 +153,25 @@ public class PlayerLoader {
             player.getInventory().setItem(lobbyItemLeavePosition, lobbyLeaveItem);
     }
 
-    private static void loadPlayer(Player player){
+    private static void loadPlayer(Player player) {
         player.setFlying(false);
         player.setAllowFlight(false);
         player.setGameMode(GameMode.ADVENTURE);
         player.getInventory().clear();
-        for(PotionEffect effect : player.getActivePotionEffects()) {
-            if(effect.getType().getName().equals("INVISIBILITY") && Main.getInstance().getDisguiser().disguised(player)) continue;
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            if (effect.getType().getName().equals("INVISIBILITY") && Main.getInstance().getDisguiser().disguised(player))
+                continue;
             player.removePotionEffect(effect.getType());
         }
         player.setFoodLevel(20);
-        if (Main.getInstance().supports(9)) {
-            AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (attribute != null) player.setHealth(attribute.getValue());
-        } else {
-            player.setHealth(player.getMaxHealth());
-        }
+        AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (attribute != null) player.setHealth(attribute.getValue());
     }
 
-    public static void openBlockHuntPicker(Player player, Map map){
-        int slots = ((map.getBlockHunt().size()-1)/9)*9+9;
+    public static void openBlockHuntPicker(Player player, Map map) {
+        int slots = ((map.getBlockHunt().size() - 1) / 9) * 9 + 9;
         Inventory inventory = Main.getInstance().getServer().createInventory(null, slots, "Select a Block: " + map.getName());
-        for(int i=0;i<map.getBlockHunt().size();i++){
+        for (int i = 0; i < map.getBlockHunt().size(); i++) {
             inventory.setItem(i, new ItemStack(map.getBlockHunt().get(i)));
         }
         player.openInventory(inventory);

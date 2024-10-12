@@ -16,10 +16,6 @@ import java.util.stream.Collectors;
 public class List implements ICommand {
 
     public void execute(Player sender, String[] args) {
-        if (!Main.getInstance().supports(9)) {
-            sender.sendMessage(Config.errorPrefix + Localization.message("BLOCKHUNT_UNSUPPORTED"));
-            return;
-        }
         Map map = Maps.getMap(args[0]);
         if(map == null) {
             sender.sendMessage(Config.errorPrefix + Localization.message("INVALID_MAP"));
