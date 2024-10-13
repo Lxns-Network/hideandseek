@@ -13,8 +13,9 @@ public class CustomItems {
     public static final int SEEKER_VISUALIZER = 12;
 
     public static int getId(ItemStack stack){
-        if(stack.getItemMeta() == null) return -1;
-        var result = stack.getItemMeta().getPersistentDataContainer().get(CUSTOM_ITEM, PersistentDataType.INTEGER);
-        return result == null ? -1 : result;
+        if(stack.getItemMeta() == null || !stack.getItemMeta().hasCustomModelData()) return -1;
+        return stack.getItemMeta().getCustomModelData();
+//        var result = stack.getItemMeta().getPersistentDataContainer().get(CUSTOM_ITEM, PersistentDataType.INTEGER);
+//        return result == null ? -1 : result;
     }
 }

@@ -20,10 +20,13 @@
 package dev.tylerm.khs.game;
 
 import com.cryptomorin.xseries.messages.Titles;
+import dev.tylerm.khs.gui.BlockPickerGUI;
+import dev.tylerm.khs.gui.SkillSelectionGUI;
 import net.md_5.bungee.api.ChatColor;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.configuration.Items;
 import dev.tylerm.khs.configuration.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -32,6 +35,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 import static dev.tylerm.khs.configuration.Config.*;
 import static dev.tylerm.khs.configuration.Items.HIDER_ITEMS;
@@ -120,6 +125,10 @@ public class PlayerLoader {
             if (glowEnabled) {
                 player.getInventory().addItem(glowPowerupItem);
             }
+            Bukkit.getScheduler().runTask(Main.getInstance(), ()->{
+                board.getHiderSelectedSkills().get(player.getUniqueId()).initialKits()
+                        .forEach(player.getInventory()::addItem);
+            });
         }
     }
 
@@ -169,12 +178,12 @@ public class PlayerLoader {
     }
 
     public static void openBlockHuntPicker(Player player, Map map) {
-        int slots = ((map.getBlockHunt().size() - 1) / 9) * 9 + 9;
-        Inventory inventory = Main.getInstance().getServer().createInventory(null, slots, "Select a Block: " + map.getName());
-        for (int i = 0; i < map.getBlockHunt().size(); i++) {
-            inventory.setItem(i, new ItemStack(map.getBlockHunt().get(i)));
-        }
-        player.openInventory(inventory);
+        var mats = map.getBlockHunt();
+        var mat = mats.get(ThreadLocalRandom.current().nextInt(mats.size()));
+        Main.getInstance().getDisguiser().disguise(player, mat, map);
+        new SkillSelectionGUI(player, Main.getInstance().getHiderSkills(), () -> {
+            //todo cyclic barrier
+        });
     }
 
 }

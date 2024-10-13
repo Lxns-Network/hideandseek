@@ -1,6 +1,5 @@
 package dev.tylerm.khs.command.map.blockhunt.blocks;
 
-import dev.tylerm.khs.Main;
 import dev.tylerm.khs.command.util.ICommand;
 import dev.tylerm.khs.configuration.Config;
 import dev.tylerm.khs.configuration.Localization;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
 
-public class List implements ICommand {
+public class ListBlocks implements ICommand {
 
     public void execute(Player sender, String[] args) {
         Map map = Maps.getMap(args[0]);
