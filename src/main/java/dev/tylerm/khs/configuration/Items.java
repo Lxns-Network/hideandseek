@@ -1,11 +1,8 @@
 package dev.tylerm.khs.configuration;
 
-import com.cryptomorin.xseries.XItemStack;
-import dev.tylerm.khs.Main;
+import dev.tylerm.khs.util.ItemUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -42,13 +39,13 @@ public class Items {
                 SEEKER_ITEMS.add(null);
                 continue;
             }
-            ItemStack item = createItem(section);
+            ItemStack item = ItemUtil.createItem(section);
             SEEKER_ITEMS.add(item);
         }
 
         ConfigurationSection SeekerHelmet = SeekerItems.getConfigurationSection("helmet");
         if (SeekerHelmet != null) {
-            ItemStack item = createItem(SeekerHelmet);
+            ItemStack item = ItemUtil.createItem(SeekerHelmet);
             if (item != null) {
                 SEEKER_HELM = item;
             }
@@ -56,7 +53,7 @@ public class Items {
 
         ConfigurationSection SeekerChestplate = SeekerItems.getConfigurationSection("chestplate");
         if (SeekerChestplate != null) {
-            ItemStack item = createItem(SeekerChestplate);
+            ItemStack item = ItemUtil.createItem(SeekerChestplate);
             if (item != null) {
                 SEEKER_CHEST = item;
             }
@@ -64,7 +61,7 @@ public class Items {
 
         ConfigurationSection SeekerLeggings = SeekerItems.getConfigurationSection("leggings");
         if (SeekerLeggings != null) {
-            ItemStack item = createItem(SeekerLeggings);
+            ItemStack item = ItemUtil.createItem(SeekerLeggings);
             if (item != null) {
                 SEEKER_LEGS = item;
             }
@@ -72,7 +69,7 @@ public class Items {
 
         ConfigurationSection SeekerBoots = SeekerItems.getConfigurationSection("boots");
         if (SeekerBoots != null) {
-            ItemStack item = createItem(SeekerBoots);
+            ItemStack item = ItemUtil.createItem(SeekerBoots);
             if (item != null) {
                 SEEKER_BOOTS = item;
             }
@@ -92,13 +89,13 @@ public class Items {
                 HIDER_ITEMS.add(null);
                 continue;
             }
-            ItemStack item = createItem(section);
+            ItemStack item = ItemUtil.createItem(section);
             HIDER_ITEMS.add(item);
         }
 
         ConfigurationSection HiderHelmet = HiderItems.getConfigurationSection("helmet");
         if (HiderHelmet != null) {
-            ItemStack item = createItem(HiderHelmet);
+            ItemStack item = ItemUtil.createItem(HiderHelmet);
             if (item != null) {
                 HIDER_HELM = item;
             }
@@ -106,7 +103,7 @@ public class Items {
 
         ConfigurationSection HiderChestplate = HiderItems.getConfigurationSection("chestplate");
         if (HiderChestplate != null) {
-            ItemStack item = createItem(HiderChestplate);
+            ItemStack item = ItemUtil.createItem(HiderChestplate);
             if (item != null) {
                 HIDER_CHEST = item;
             }
@@ -114,7 +111,7 @@ public class Items {
 
         ConfigurationSection HiderLeggings = HiderItems.getConfigurationSection("leggings");
         if (HiderLeggings != null) {
-            ItemStack item = createItem(HiderLeggings);
+            ItemStack item = ItemUtil.createItem(HiderLeggings);
             if (item != null) {
                 HIDER_LEGS = item;
             }
@@ -122,7 +119,7 @@ public class Items {
 
         ConfigurationSection HiderBoots = HiderItems.getConfigurationSection("boots");
         if (HiderBoots != null) {
-            ItemStack item = createItem(HiderBoots);
+            ItemStack item = ItemUtil.createItem(HiderBoots);
             if (item != null) {
                 HIDER_BOOTS = item;
             }
@@ -150,36 +147,6 @@ public class Items {
             if (effect != null) HIDER_EFFECTS.add(effect);
             i++;
         }
-    }
-
-    private static ItemStack createItem(ConfigurationSection item) {
-        ConfigurationSection config = new YamlConfiguration().createSection("temp");
-        String material = item.getString("material").toUpperCase();
-        boolean splash = false;
-        if (material.contains("POTION")) {
-            config.set("level", 1);
-        }
-        if (material.equalsIgnoreCase("SPLASH_POTION") || material.equalsIgnoreCase("LINGERING_POTION")) {
-            material = "POTION";
-            splash = true;
-        }
-        config.set("name", item.getString("name"));
-        config.set("material", material);
-        config.set("enchants", item.getConfigurationSection("enchantments"));
-        config.set("unbreakable", item.getBoolean("unbreakable"));
-        if (item.contains("model-data")) {
-            config.set("model-data", item.getInt("model-data"));
-        }
-        if (item.isSet("lore"))
-            config.set("lore", item.getStringList("lore"));
-        if (material.equalsIgnoreCase("POTION") || material.equalsIgnoreCase("SPLASH_POTION") || material.equalsIgnoreCase("LINGERING_POTION"))
-            config.set("base-effect", String.format("%s,%s,%s", item.getString("type"), false, splash));
-        ItemStack stack = XItemStack.deserialize(config);
-        int amt = item.getInt("amount");
-        if (amt < 1) amt = 1;
-        stack.setAmount(amt);
-        if (stack.getData().getItemType() == Material.AIR) return null;
-        return stack;
     }
 
     private static PotionEffect getPotionEffect(ConfigurationSection item) {

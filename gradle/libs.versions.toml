@@ -2,14 +2,15 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-com-comphenix-protocol-protocollib = "5.0.0"
-com-github-cryptomorin-xseries = "9.4.0"
+com-comphenix-protocol-protocollib = "5.1.0"
+com-github-cryptomorin-xseries = "11.3.0"
 com-zaxxer-hikaricp = "4.0.3"
 me-clip-placeholderapi = "2.11.6"
 org-jetbrains-annotations = "23.0.0"
 org-spigotmc-spigot-api = "1.21-R0.1-SNAPSHOT"
 org-xerial-sqlite-jdbc = "3.41.2.2"
 org-mariadb-jdbc-mariadb-java-client = "3.1.2"
+canvas = "1.7.0-SNAPSHOT"
 
 
 [libraries]
@@ -21,3 +22,4 @@ org-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref 
 org-spigotmc-spigot-api = { module = "org.spigotmc:spigot-api", version.ref = "org-spigotmc-spigot-api" }
 org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org-xerial-sqlite-jdbc" }
 org-mariadb-jdbc-mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "org-mariadb-jdbc-mariadb-java-client" }
+org-ipvp-canvas = { module = "org.ipvp:canvas", version.ref = "canvas"}
