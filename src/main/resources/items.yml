@@ -5,23 +5,23 @@
 items:
   seeker:
     '0':
-      material: DIAMOND_SWORD
+      material: IRON_SWORD
       amount: 1
       enchantments:
         sharpness: 1
-      name: 'Seeker Sword'
+      name: '&c寻找者之剑'
       unbreakable: true
-      lore:
-        - 'This is the seeker sword'
     '1':
-      material: STICK
+      material: BOW
       amount: 1
       enchantments:
-        knockback: 3
-      name: 'Wacky Stick'
-      lore:
-        - 'It will launch people very far'
-        - 'Use wisely!'
+        infinity: 1
+        power: 2
+      name: '&c寻找者之弓'
+      unbreakable: true
+    '2':
+      material: ARROW
+      amount: 1
     'helmet':
       material: LEATHER_HELMET
     'chestplate':
@@ -39,31 +39,28 @@ items:
       amount: 1
       enchantments:
         sharpness: 2
-      name: 'Hider Sword'
+      name: '躲藏者之剑'
       unbreakable: true
       lore:
-        - 'This is the hider sword'
+        - '&f也不是不能用'
     '1':
-      material: SPLASH_POTION
+      material: STICK
       amount: 1
-      type: REGEN
-    '2':
-      material: POTION
-      amount: 2
-      type: INSTANT_HEAL
-
+      enchantments:
+        knockback: 3
+      name: '&b击退棍'
+      lore:
+        - '&f"Combo master!"'
+    'boots':
+      material: LEATHER_BOOTS
+      enchantments:
+        feather_falling: 1
 effects:
   seeker:
     '1':
       type: SPEED
       duration: 1000000
       amplifier: 2
-      ambient: false
-      particles: false
-    '2':
-      type: JUMP
-      duration: 1000000
-      amplifier: 1
       ambient: false
       particles: false
     '4':
@@ -79,6 +76,12 @@ effects:
       ambient: false
       particles: false
   hider:
+    '0':
+      type: SPEED
+      duration: 1000000
+      amplifier: 1
+      ambient: false
+      particles: false
     '1':
       type: WATER_BREATHING
       duration: 1000000

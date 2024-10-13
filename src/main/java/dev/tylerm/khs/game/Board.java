@@ -1,5 +1,6 @@
 package dev.tylerm.khs.game;
 
+import dev.tylerm.khs.configuration.skill.HiderSkill;
 import dev.tylerm.khs.game.events.Border;
 import dev.tylerm.khs.game.events.Glow;
 import dev.tylerm.khs.game.events.Taunt;
@@ -29,6 +30,7 @@ public class Board {
     private final Map<UUID, Type> Players = new HashMap<>();
     private final Map<UUID, CustomBoard> customBoards = new HashMap<>();
     private final Map<UUID, Integer> hider_kills = new HashMap<>(), seeker_kills = new HashMap<>(), hider_deaths = new HashMap<>(), seeker_deaths = new HashMap<>();
+    private final Map<UUID, HiderSkill> hiderSelectedSkills = new HashMap<>();
 
     public boolean contains(Player player) {
         return Players.containsKey(player.getUniqueId());
@@ -152,6 +154,7 @@ public class Board {
         seeker_kills.clear();
         hider_deaths.clear();
         seeker_deaths.clear();
+        hiderSelectedSkills.clear();
     }
 
     public void addKill(UUID uuid) {
@@ -188,6 +191,10 @@ public class Board {
 
     public Map<UUID, Integer> getSeekerDeaths() {
         return new HashMap<>(seeker_deaths);
+    }
+
+    public Map<UUID, HiderSkill> getHiderSelectedSkills() {
+        return hiderSelectedSkills;
     }
 
     public void createLobbyBoard(Player player) {

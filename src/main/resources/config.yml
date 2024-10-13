@@ -15,12 +15,15 @@ spawnPatch: false
 # default: 300 aka 5min
 gameLength: 300
 
+# The last seconds in the game we'll highlight hiders around seekers.
+whenToHighlight: 10
+
 # How long will be added into the timer when a seeker is found
 extendPerKill: 30
 
 # How long in seconds will the initial hiding period last, minimum is 10 seconds
 # default: 30
-hidingTimer: 30
+hidingTimer: 45
 
 # Announce join/leave/game over messages to people not playing the game
 # default: true
@@ -180,7 +183,7 @@ databaseName: "hideandseek"
 # to publicly show the taunt countdown, and have the taunt run with only
 # one Hider left. Taunt delay must at least be 60s.
 taunt:
-  delay: 360
+  delay: 30
   whenLastPerson: false
   showCountdown: true
   enabled: true
@@ -194,7 +197,7 @@ taunt:
 glow:
   time: 10
   stackable: true
-  enabled: true
+  enabled: false
   name: "Glow Powerup"
   lore: [
     "Throw to make all seekers glow",
@@ -212,7 +215,7 @@ glow:
 # default: false
 alwaysGlow: false
 
-blindnessWhenHit: 6
+blindnessWhenHit: 20
 
 # The message prefixes displayed before messages. The message contents themselves
 # can be changed in localization.yml.

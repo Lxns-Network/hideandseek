@@ -32,6 +32,7 @@ dependencies {
     api libs.org.jetbrains.annotations
     api libs.com.github.cryptomorin.xseries
     api libs.com.zaxxer.hikaricp
+    implementation libs.org.ipvp.canvas
     compileOnly libs.org.xerial.sqlite.jdbc
     compileOnly libs.org.mariadb.jdbc.mariadb.java.client
     compileOnly libs.org.spigotmc.spigot.api

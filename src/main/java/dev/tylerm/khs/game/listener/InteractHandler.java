@@ -5,7 +5,12 @@ import com.cryptomorin.xseries.messages.ActionBar;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.util.Status;
+import dev.tylerm.khs.gui.BlockPickerGUI;
+import dev.tylerm.khs.item.CustomItems;
+import dev.tylerm.khs.util.item.ItemStacks;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,9 +21,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static dev.tylerm.khs.configuration.Config.*;
 import static dev.tylerm.khs.configuration.Config.glowPowerupItem;
@@ -69,9 +77,9 @@ public class InteractHandler implements Listener {
     }
 
     private void onPlayerInteractGame(ItemStack temp, PlayerInteractEvent event) {
+        var player = event.getPlayer();
         if (temp.isSimilar(glowPowerupItem)) {
             if (!glowEnabled) return;
-            Player player = event.getPlayer();
             if (Main.getInstance().getBoard().isHider(player)) {
                 Main.getInstance().getGame().getGlow().onProjectile();
                 player.getInventory().remove(glowPowerupItem);
@@ -80,22 +88,58 @@ public class InteractHandler implements Listener {
                 event.setCancelled(true);
             }
         }
+        switch (CustomItems.getId(temp)) {
+            case CustomItems.BLOCK_CHANGER -> {
+                player.getInventory().remove(temp);
+                new BlockPickerGUI(
+                        event.getPlayer(),
+                        Main.getInstance().getGame().getCurrentMap(),
+                        () -> {
+                        });
+            }
+            case CustomItems.SEEKER_VISUALIZER -> {
+                var glow = Main.getInstance().getGame().getGlow();
+                var seekers = Main.getInstance().getBoard().getSeekers()
+                        .stream().map(Entity::getUniqueId).toList();
+                for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
+                    glow.setGlow(player, seeker, true);
+                }
+                var pUUID = player.getUniqueId();
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                    var user = Bukkit.getPlayer(pUUID);
+                    if (user == null) return;
+                    for (UUID seeker : seekers) {
+                        var p = Bukkit.getPlayer(seeker);
+                        if (p != null)
+                            glow.setGlow(user, p, false);
+                    }
+                }, 3 * 20);
+            }
+            case CustomItems.SPEED_POTION -> {
+                temp.setAmount(temp.getAmount() - 1);
+                player.addPotionEffect(new PotionEffect(
+                        PotionEffectType.SPEED,
+                        20 * 5,
+                        3
+                ));
+            }
+        }
     }
 
-    private void onSpectatorInteract(ItemStack temp, PlayerInteractEvent event){
-        if(temp.isSimilar(flightToggleItem)){
+    private void onSpectatorInteract(ItemStack temp, PlayerInteractEvent event) {
+        if (temp.isSimilar(flightToggleItem)) {
             boolean isFlying = event.getPlayer().getAllowFlight();
             event.getPlayer().setAllowFlight(!isFlying);
             event.getPlayer().setFlying(!isFlying);
             ActionBar.clearActionBar(event.getPlayer());
-            if(!isFlying){
+            if (!isFlying) {
                 ActionBar.sendActionBar(event.getPlayer(), message("FLYING_ENABLED").toString());
             } else {
                 ActionBar.sendActionBar(event.getPlayer(), message("FLYING_DISABLED").toString());
             }
             return;
         }
-        if(temp.isSimilar(teleportItem)){
+        if (temp.isSimilar(teleportItem)) {
             // int amount = Main.getInstance().getBoard().getHiders().size() + Main.getInstance().getBoard().getSeekers().size();
             // Inventory teleportMenu = Main.getInstance().getServer().createInventory(null, 9*(((amount-1)/9)+1), ChatColor.stripColor(teleportItem.getItemMeta().getDisplayName()));
             // List<String> hider_lore = new ArrayList<>(); hider_lore.add(message("HIDER_TEAM_NAME").toString());
@@ -108,11 +152,11 @@ public class InteractHandler implements Listener {
     }
 
     public static void createSpectatorTeleportPage(Player player, int page) {
-        
+
         if (page < 0) {
             return;
         }
-        
+
         final Board board = Main.getInstance().getBoard();
         List<Player> players = new ArrayList<>();
         players.addAll(board.getHiders());
@@ -121,13 +165,13 @@ public class InteractHandler implements Listener {
         final int page_size = 9 * 5;
         final int amount = players.size();
         final int start = page * page_size;
-        
+
         int page_amount = amount - start;
-        
+
         if (page_amount < 1) {
             return;
         }
-        
+
         boolean next = false, prev = true;
 
         if (page_amount > page_size) {
@@ -143,14 +187,16 @@ public class InteractHandler implements Listener {
 
         final Inventory teleportMenu = Main.getInstance().getServer().createInventory(null, 9 * rows, ChatColor.stripColor(teleportItem.getItemMeta().getDisplayName()));
 
-        final List<String> hider_lore = new ArrayList<>(); hider_lore.add(message("HIDER_TEAM_NAME").toString());
-        final List<String> seeker_lore = new ArrayList<>(); seeker_lore.add(message("SEEKER_TEAM_NAME").toString());
-        
+        final List<String> hider_lore = new ArrayList<>();
+        hider_lore.add(message("HIDER_TEAM_NAME").toString());
+        final List<String> seeker_lore = new ArrayList<>();
+        seeker_lore.add(message("SEEKER_TEAM_NAME").toString());
+
         for (int i = 0; i < page_amount; i++) {
             Player plr = players.get(i);
             teleportMenu.addItem(getSkull(plr, board.isHider(plr) ? hider_lore : seeker_lore));
         }
-        
+
         final int lastRow = (rows - 1) * 9;
         if (prev) {
             teleportMenu.setItem(lastRow, getPageItem(page - 1));
@@ -166,12 +212,12 @@ public class InteractHandler implements Listener {
     private static ItemStack getPageItem(int page) {
         ItemStack prevItem = new ItemStack(XMaterial.ENCHANTED_BOOK.parseMaterial(), page + 1);
         ItemMeta meta = prevItem.getItemMeta();
-        meta.setDisplayName("Page " + (page+1));
+        meta.setDisplayName("Page " + (page + 1));
         prevItem.setItemMeta(meta);
         return prevItem;
     }
 
-    private static ItemStack getSkull(Player player, List<String> lore){
+    private static ItemStack getSkull(Player player, List<String> lore) {
         assert XMaterial.PLAYER_HEAD.parseMaterial() != null;
         ItemStack playerHead = new ItemStack(XMaterial.PLAYER_HEAD.parseMaterial(), 1, (byte) 3);
         SkullMeta playerHeadMeta = (SkullMeta) playerHead.getItemMeta();

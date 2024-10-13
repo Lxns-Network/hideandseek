@@ -44,7 +44,6 @@ public class InventoryHandler implements Listener {
         checkForInventoryMove(event);
         checkForSpectatorTeleportMenu(event);
         checkForDebugMenu(event);
-        checkForBlockHuntMenu(event);
     }
 
     private void checkForInventoryMove(InventoryClickEvent event) {
@@ -59,6 +58,7 @@ public class InventoryHandler implements Listener {
         ItemStack item = event.getCurrentItem();
 
         ItemMeta meta = item.getItemMeta();
+        if(meta==null)return;
         String name = meta.getDisplayName();
 
         if (Main.getInstance().getBoard().isSpectator(player)) {
@@ -91,41 +91,6 @@ public class InventoryHandler implements Listener {
             player.closeInventory();
             Debug.handleOption(player, event.getRawSlot());
         }
-    }
-
-    private void checkForBlockHuntMenu(InventoryClickEvent event) {
-        boolean test;
-        String mapName;
-        test = event.getView().getTitle().startsWith("Select a Block: ");
-        if (!test) return;
-        mapName = event.getView().getTitle().substring("Select a Block: ".length());
-
-        event.setCancelled(true);
-        Map map = Maps.getMap(mapName);
-        if (map == null) return;
-        Material mat = map.getBlockHunt().get(event.getRawSlot());
-        if (mat == null) return;
-        Player player = (Player) event.getWhoClicked();
-        Main.getInstance().getDisguiser().disguise(player, mat, map);
-        player.closeInventory();
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player)) return;
-        boolean test;
-        String mapName;
-        test = event.getView().getTitle().startsWith("Select a Block: ");
-        if (!test) return;
-        mapName = event.getView().getTitle().substring("Select a Block: ".length());
-        Map map = Maps.getMap(mapName);
-        if (map == null) return;
-        Material mat = map.getBlockHunt().get(0);
-        if (mat == null) return;
-        Player player = (Player) event.getPlayer();
-        if (Main.getInstance().getDisguiser().disguised(player)) return;
-        Main.getInstance().getDisguiser().disguise(player, mat, map);
-        player.closeInventory();
     }
 
 }
