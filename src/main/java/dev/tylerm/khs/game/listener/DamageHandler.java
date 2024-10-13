@@ -104,10 +104,12 @@ public class DamageHandler implements Listener {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
                 if (game.getStatus() == Status.PLAYING) {
                     game.getCurrentMap().getGameSpawn().teleport(player);
+                    player.setHealth(20d);
                 }
             }, delayedRespawnDelay * 20L);
         } else {
             game.getCurrentMap().getGameSpawn().teleport(player);
+            player.setHealth(20d);
         }
         // Add leaderboard stats
         board.addDeath(player.getUniqueId());
