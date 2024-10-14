@@ -8,8 +8,10 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedEnumEntityUseAction;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.util.Disguise;
+import dev.tylerm.khs.game.util.Status;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
@@ -21,6 +23,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.ArrayList;
@@ -54,10 +57,11 @@ public class DisguiseHandler implements Listener {
                 PacketContainer packet = event.getPacket();
 
                 // only left click attacks
-                EnumWrappers.EntityUseAction action = packet.getEntityUseActions().getValues().stream().findFirst().orElse(null);
-                if (action == null) return;
+                //EnumWrappers.EntityUseAction action = packet.getEntityUseActions().getValues().stream().findFirst().orElse(null);
+                var action = packet.getEnumEntityUseActions().getValues().stream().findFirst().orElse(null);
+                if (action == null || action.getAction() != EnumWrappers.EntityUseAction.ATTACK) return;
                 //noinspection ComparatorResultComparison
-                if (action.compareTo(EnumWrappers.EntityUseAction.INTERACT) == 2) {
+                if (action.getAction().compareTo(EnumWrappers.EntityUseAction.INTERACT) == 2) {
                     return;
                 }
 

@@ -2,25 +2,29 @@ package dev.tylerm.khs.game.util;
 
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.messages.ActionBar;
+import dev.tylerm.khs.configuration.Map;
 import dev.tylerm.khs.util.packet.BlockChangePacket;
 import dev.tylerm.khs.util.packet.EntityTeleportPacket;
 import dev.tylerm.khs.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.HashMap;
+
 @SuppressWarnings("deprecation")
 public class Disguise {
-
     final Player hider;
     final Material material;
     FallingBlock block;
-    AbstractHorse hitBox;
+    PolarBear hitBox;
     Location blockLocation;
     boolean solid, solidify, solidifying;
     static Team hidden;
@@ -150,7 +154,7 @@ public class Disguise {
     }
 
     private void respawnHitbox() {
-        hitBox = (AbstractHorse) hider.getLocation().getWorld().spawnEntity(hider.getLocation().add(0, 1000, 0), EntityType.SKELETON_HORSE);
+        hitBox = (PolarBear) hider.getLocation().getWorld().spawnEntity(hider.getLocation().add(0, 1000, 0), EntityType.POLAR_BEAR);
         hitBox.setGravity(false);
         hitBox.setAI(false);
         hitBox.setInvulnerable(true);
