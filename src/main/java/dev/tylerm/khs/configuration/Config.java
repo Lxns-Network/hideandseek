@@ -105,7 +105,6 @@ public class Config {
     public static ItemStack
             lobbyLeaveItem,
             lobbyStartItem,
-            glowPowerupItem,
             flightToggleItem,
             teleportItem;
 
@@ -156,12 +155,7 @@ public class Config {
         //Glow
         blindnessWhenHit = config.getInt("blindnessWhenHit");
         alwaysGlow = config.getBoolean("alwaysGlow");
-        glowLength = Math.max(1, config.getInt("glow.time"));
-        glowStackable = config.getBoolean("glow.stackable");
         glowEnabled = config.getBoolean("glow.enabled") && !alwaysGlow;
-        if (glowEnabled) {
-            glowPowerupItem = createItemStack("glow");
-        }
 
         //Lobby
         startingSeekerCount = Math.max(1, config.getInt("startingSeekerCount"));

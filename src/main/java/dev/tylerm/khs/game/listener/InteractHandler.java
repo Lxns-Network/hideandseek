@@ -7,7 +7,6 @@ import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.util.Status;
 import dev.tylerm.khs.gui.BlockPickerGUI;
 import dev.tylerm.khs.item.CustomItems;
-import dev.tylerm.khs.util.item.ItemStacks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static dev.tylerm.khs.configuration.Config.*;
-import static dev.tylerm.khs.configuration.Config.glowPowerupItem;
 import static dev.tylerm.khs.configuration.Localization.message;
 
 @SuppressWarnings("deprecation")
@@ -78,16 +76,6 @@ public class InteractHandler implements Listener {
 
     private void onPlayerInteractGame(ItemStack temp, PlayerInteractEvent event) {
         var player = event.getPlayer();
-        if (temp.isSimilar(glowPowerupItem)) {
-            if (!glowEnabled) return;
-            if (Main.getInstance().getBoard().isHider(player)) {
-                Main.getInstance().getGame().getGlow().onProjectile();
-                player.getInventory().remove(glowPowerupItem);
-                assert XMaterial.SNOWBALL.parseMaterial() != null;
-                player.getInventory().remove(XMaterial.SNOWBALL.parseMaterial());
-                event.setCancelled(true);
-            }
-        }
         switch (CustomItems.getId(temp)) {
             case CustomItems.BLOCK_CHANGER -> {
                 player.getInventory().remove(temp);

@@ -122,9 +122,6 @@ public class PlayerLoader {
             }
             for (PotionEffect effect : Items.HIDER_EFFECTS)
                 player.addPotionEffect(effect);
-            if (glowEnabled) {
-                player.getInventory().addItem(glowPowerupItem);
-            }
             Bukkit.getScheduler().runTask(Main.getInstance(), ()->{
                 board.getHiderSelectedSkills().get(player.getUniqueId()).initialKits()
                         .forEach(player.getInventory()::addItem);
