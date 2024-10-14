@@ -91,7 +91,6 @@ public class Config {
             startingSeekerCount,
             delayedRespawnDelay,
             hidingTimer,
-            whenToHighlight,
             endGameDelay;
 
     public static float
@@ -153,7 +152,6 @@ public class Config {
         tauntCountdown = config.getBoolean("taunt.showCountdown");
         tauntDelay = Math.max(60, config.getInt("taunt.delay"));
         tauntLast = config.getBoolean("taunt.whenLastPerson");
-        whenToHighlight = config.getInt("whenToHighlight");
 
         //Glow
         blindnessWhenHit = config.getInt("blindnessWhenHit");
