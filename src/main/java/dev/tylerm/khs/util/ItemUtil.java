@@ -1,20 +1,21 @@
 package dev.tylerm.khs.util;
 
 import com.cryptomorin.xseries.XItemStack;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemUtil{
+public class ItemUtil {
     public static ItemStack createItem(ConfigurationSection item) {
         ConfigurationSection config = new YamlConfiguration().createSection("temp");
         String material = item.getString("material").toUpperCase();
         boolean splash = false;
         if (material.contains("POTION")) {
-            if(!item.contains("potionLevel")){
+            if (!item.contains("potionLevel")) {
                 config.set("level", 1);
-            }else{
+            } else {
                 config.set("level", item.getInt("potionLevel"));
             }
         }
@@ -22,7 +23,8 @@ public class ItemUtil{
             material = "POTION";
             splash = true;
         }
-        config.set("name", item.getString("name"));
+        var name = item.getString("name");
+        if (name != null) config.set("name", ChatColor.translateAlternateColorCodes('&', name));
         config.set("material", material);
         config.set("enchants", item.getConfigurationSection("enchantments"));
         config.set("unbreakable", item.getBoolean("unbreakable"));
@@ -30,7 +32,7 @@ public class ItemUtil{
             config.set("model-data", item.getInt("model-data"));
         }
         if (item.isSet("lore"))
-            config.set("lore", item.getStringList("lore"));
+            config.set("lore", item.getStringList("lore").stream().map(it->ChatColor.translateAlternateColorCodes('&',it)).toList());
         if (material.equalsIgnoreCase("POTION") || material.equalsIgnoreCase("SPLASH_POTION") || material.equalsIgnoreCase("LINGERING_POTION"))
             config.set("base-effect", String.format("%s,%s,%s", item.getString("type"), false, splash));
         ItemStack stack = XItemStack.deserialize(config);
