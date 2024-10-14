@@ -54,7 +54,6 @@ public class Main extends JavaPlugin implements Listener {
     private Database database;
     private Board board;
     private Disguiser disguiser;
-    private EntityHider entityHider;
     private Game game;
     private CommandGroup commandGroup;
     private List<HiderSkill> hiderSkills;
@@ -97,8 +96,6 @@ public class Main extends JavaPlugin implements Listener {
         this.database = new Database();
         getLogger().info("Loading disguises...");
         this.disguiser = new Disguiser();
-        getLogger().info("Loading entity hider...");
-        this.entityHider = new EntityHider(this, EntityHider.Policy.BLACKLIST);
         getLogger().info("Registering listeners...");
         this.registerListeners();
 
@@ -321,10 +318,6 @@ public class Main extends JavaPlugin implements Listener {
 
     public Disguiser getDisguiser() {
         return disguiser;
-    }
-
-    public EntityHider getEntityHider() {
-        return entityHider;
     }
 
     public CommandGroup getCommandGroup() {

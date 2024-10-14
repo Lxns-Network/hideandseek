@@ -24,7 +24,7 @@ public class Disguise {
     final Player hider;
     final Material material;
     FallingBlock block;
-    PolarBear hitBox;
+    LivingEntity hitBox;
     Location blockLocation;
     boolean solid, solidify, solidifying;
     static Team hidden;
@@ -75,6 +75,18 @@ public class Disguise {
         return hider;
     }
 
+    public boolean isSolid() {
+        return solid;
+    }
+
+    public LivingEntity getHitBox() {
+        return hitBox;
+    }
+
+    public FallingBlock getBlock() {
+        return block;
+    }
+
     public void update() {
 
         if (block == null || block.isDead()) {
@@ -97,6 +109,7 @@ public class Disguise {
             sendBlockUpdate(blockLocation, Material.AIR);
         }
         toggleEntityVisibility(block, !solid);
+        toggleEntityVisibility(getPlayer(), !solid);
         teleportEntity(hitBox, true);
         teleportEntity(block, solid);
     }
@@ -139,10 +152,15 @@ public class Disguise {
         if (entity == null) return;
         Bukkit.getOnlinePlayers().forEach(receiver -> {
             if (receiver == hider) return;
-            if (show)
-                Main.getInstance().getEntityHider().showEntity(receiver, entity);
-            else
-                Main.getInstance().getEntityHider().hideEntity(receiver, entity);
+            if (show) {
+                if (entity instanceof Player p) {
+                    receiver.showPlayer(Main.getInstance(), p);
+                } else receiver.showEntity(Main.getInstance(), entity);
+            } else
+            if (entity instanceof Player p) {
+                receiver.hidePlayer(Main.getInstance(), p);
+            } else receiver.hideEntity(Main.getInstance(), entity);
+            //Main.getInstance().getEntityHider().hideEntity(receiver, entity);
         });
     }
 
