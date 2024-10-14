@@ -291,13 +291,6 @@ public class Board {
                     } else {
                         board.setLine(String.valueOf(i), line.replace("{TAUNT}", TAUNT_ACTIVE));
                     }
-                } else if (line.contains("{GLOW}")) {
-                    if (!glowEnabled) continue;
-                    if (glow == null || status == Status.STARTING || !glow.isRunning()) {
-                        board.setLine(String.valueOf(i), line.replace("{GLOW}", GLOW_INACTIVE));
-                    } else {
-                        board.setLine(String.valueOf(i), line.replace("{GLOW}", GLOW_ACTIVE));
-                    }
                 } else if (line.contains("{#SEEKER}")) {
                     board.setLine(String.valueOf(i), line.replace("{#SEEKER}", getSeekers().size() + ""));
                 } else if (line.contains("{#HIDER}")) {

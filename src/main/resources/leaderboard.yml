@@ -45,48 +45,43 @@
 #   BE CHANGED, AND THE SECOND ONE WILL SAY A PLACEHOLDER MARKER!
 
 lobby:
-  title: "&eHIDE AND SEEK"
+  title: "&e躲猫猫"
   content: [
     "{COUNTDOWN}",
     "",
-    "Players: {COUNT}",
+    "玩家数: {COUNT}",
     "",
-    "&cSEEKER % &f{SEEKER%}",
-    "&6HIDER % &f{HIDER%}",
+    "&c猎人 % &f{SEEKER%}",
+    "&6方块 % &f{HIDER%}",
     "",
-    "Map: {MAP}",
+    "当前地图: {MAP}",
   ]
 
 game:
-  title: "&eHIDE AND SEEK"
+  title: "&e躲猫猫"
   content: [
-    "Map: {MAP}",
-    "Team: {TEAM}",
+    "地图: {MAP}",
+    "队伍: {TEAM}",
     "",
-    "Time Left: &a{TIME}",
+    "剩余时长: &a{TIME}",
     "",
-    "Taunt: &e{TAUNT}",
-    "Glow: {GLOW}",
-    "WorldBorder: &b{BORDER}",
+    "嘲讽: &e{TAUNT}",
+    "地图边界: &b{BORDER}",
     "",
-    "&cSEEKERS: &f{#SEEKER}",
-    "&6HIDERS: &f{#HIDER}"
+    "&c猎人: &f{#SEEKER}",
+    "&6方块: &f{#HIDER}"
   ]
 
 countdown:
-  waiting: "Waiting for players..."
-  adminStart: "Waiting for gamemaster..."
-  counting: "Starting in: &a{AMOUNT}s"
+  waiting: "等待更多玩家..."
+  adminStart: "等待管理员..."
+  counting: "&a{AMOUNT}s&f 后开始"
 
 taunt:
   counting: "{AMOUNT}m{AMOUNT}s"
-  active: "Active"
-  expired: "Expired"
-
-glow:
-  active: "&aActive"
-  inactive: "&cInactive"
+  active: "激活"
+  expired: "失效"
 
 border:
   counting: "{AMOUNT}m{AMOUNT}s"
-  decreasing: "Decreasing"
+  decreasing: "正在缩圈"

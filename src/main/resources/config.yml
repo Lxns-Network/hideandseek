@@ -240,16 +240,16 @@ lobby:
 lobbyItems:
   leave:
     material: "BED"
-    name: "&cLeave Lobby"
+    name: "&c离开"
     lore: [
-      "Go back to server hub"
+      "&f回到大厅"
     ]
     position: 8
     model-data: 0
     enabled: true
   start:
     material: "CLOCK"
-    name: "&bStart Game"
+    name: "&b开始游戏"
     lore: []
     position: 0
     model-data: 0
@@ -262,17 +262,17 @@ lobbyItems:
 spectatorItems:
   flight:
     material: "FEATHER"
-    name: "&bToggle Flight"
+    name: "&b启用飞行"
     lore: [
-      "Turns flying on and off"
+      "&f开启/关闭 飞行模式"
     ]
     position: 3
     model-data: 0
   teleport:
     material: "COMPASS"
-    name: "&bTeleport to Others"
+    name: "&b传送到玩家"
     lore: [
-      "Allows you to teleport to all other players in game"
+      "&f使用它传送到其他玩家"
     ]
     position: 5
     model-data: 0

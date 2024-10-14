@@ -14,8 +14,6 @@ public class Leaderboard {
             TAUNT_COUNTING,
             TAUNT_ACTIVE,
             TAUNT_EXPIRED,
-            GLOW_ACTIVE,
-            GLOW_INACTIVE,
             BORDER_COUNTING,
             BORDER_DECREASING;
 
@@ -39,8 +37,6 @@ public class Leaderboard {
         TAUNT_COUNTING = leaderboard.getString("taunt.counting");
         TAUNT_ACTIVE = leaderboard.getString("taunt.active");
         TAUNT_EXPIRED = leaderboard.getString("taunt.expired");
-        GLOW_ACTIVE = leaderboard.getString("glow.active");
-        GLOW_INACTIVE = leaderboard.getString("glow.inactive");
         BORDER_COUNTING = leaderboard.getString("border.counting");
         BORDER_DECREASING = leaderboard.getString("border.decreasing");
 
