@@ -109,7 +109,6 @@ public class Disguise {
             sendBlockUpdate(blockLocation, Material.AIR);
         }
         toggleEntityVisibility(block, !solid);
-        toggleEntityVisibility(getPlayer(), !solid);
         teleportEntity(hitBox, true);
         teleportEntity(block, solid);
     }
