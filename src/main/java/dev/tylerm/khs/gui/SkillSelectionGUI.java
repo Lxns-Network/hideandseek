@@ -56,6 +56,7 @@ public class SkillSelectionGUI implements InventoryHolder {
                 return;
             }
             event.setCancelled(true);
+            if(event.getRawSlot() > gui.skills.size())return;
             var skill = gui.skills.get(event.getRawSlot());
             if (skill == null) {
                 return;

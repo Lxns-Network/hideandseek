@@ -47,6 +47,7 @@ public class BlockPickerGUI implements InventoryHolder {
                 return;
             }
             event.setCancelled(true);
+            if(event.getRawSlot() > gui.map.getBlockHunt().size())return;
             var mat = gui.map.getBlockHunt().get(event.getRawSlot());
             if (mat == null) return;
             Player player = (Player) event.getWhoClicked();
