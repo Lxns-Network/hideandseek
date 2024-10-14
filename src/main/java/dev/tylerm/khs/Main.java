@@ -189,11 +189,11 @@ public class Main extends JavaPlugin implements Listener {
         }
         {
             var windCharge = new ItemStack(Material.WIND_CHARGE);
-            windCharge.setAmount(2);
+            windCharge.setAmount(4);
             var display = ItemStacks.of(
                     Material.WIND_CHARGE,
                     "&b弹弓",
-                    "风弹 x2"
+                    "风弹 x4"
             );
             list.add(new HiderSkill(display,List.of(windCharge)));
         }
