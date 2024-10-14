@@ -191,16 +191,6 @@ public class Main extends JavaPlugin implements Listener {
             list.add(new HiderSkill(display,List.of(spdyPotion)));
         }
         {
-            var windCharge = new ItemStack(Material.WIND_CHARGE);
-            windCharge.setAmount(2);
-            var display = ItemStacks.of(
-                    Material.WIND_CHARGE,
-                    "&b弹弓",
-                    "风弹 x2"
-            );
-            list.add(new HiderSkill(display,List.of(windCharge)));
-        }
-        {
             var blockChanger = ItemStacks.builder(Material.BLAZE_ROD)
                     .customModelId(CustomItems.BLOCK_CHANGER)
                     .displayName("&d失控魔杖")
