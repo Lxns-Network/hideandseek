@@ -34,7 +34,6 @@ import dev.tylerm.khs.configuration.Maps;
 import dev.tylerm.khs.game.util.WinType;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -340,7 +339,17 @@ public class Game {
         if (gameTick % 20 == 0) {
             if (gameLength > 0) {
                 board.reloadGameBoards();
-                gameTimer--;
+                if (gameTimer-- < whenToHighlight * 20) {
+                    for (Player seeker : board.getSeekers()) {
+                        for (Entity nearbyEntity : seeker.getNearbyEntities(2, 2, 2)) {
+                            if(nearbyEntity instanceof Player player){
+                                if(board.isHider(player)){
+                                    player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+                                }
+                            }
+                        }
+                    }
+                }
             }
             if (currentMap.isWorldBorderEnabled()) currentMap.getWorldBorder().update();
             if (tauntEnabled) taunt.update();
