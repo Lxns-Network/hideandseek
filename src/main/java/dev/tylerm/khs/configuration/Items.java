@@ -9,9 +9,11 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class Items {
-
+    private static final Predicate<String> INT = Pattern.compile("[0-9]+").asPredicate();
     public static List<ItemStack> HIDER_ITEMS, SEEKER_ITEMS;
     public static ItemStack
             HIDER_HELM, SEEKER_HELM,
@@ -33,6 +35,7 @@ public class Items {
 
         ConfigurationSection SeekerItems = manager.getConfigurationSection("items.seeker");
         for (String key : SeekerItems.getKeys(false)) {
+            if(!INT.test(key)) continue;
             ConfigurationSection section = SeekerItems.getConfigurationSection(key);
             if (section == null) {
                 SEEKER_ITEMS.add(null);
@@ -82,6 +85,7 @@ public class Items {
 
         ConfigurationSection HiderItems = manager.getConfigurationSection("items.hider");
         for (String key : HiderItems.getKeys(false)) {
+            if(!INT.test(key)) continue;
             ConfigurationSection section = HiderItems.getConfigurationSection(key);
             if (section == null) {
                 HIDER_ITEMS.add(null);
