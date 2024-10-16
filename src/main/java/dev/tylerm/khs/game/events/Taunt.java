@@ -1,6 +1,7 @@
 package dev.tylerm.khs.game.events;
 
 import dev.tylerm.khs.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.World;
@@ -8,6 +9,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Optional;
 import java.util.Random;
@@ -69,20 +73,29 @@ public class Taunt {
                 delay = tauntDelay;
                 return;
             }
-            Firework fw = (Firework) world.spawnEntity(taunted.getLocation(), EntityType.FIREWORK_ROCKET);
-            FireworkMeta fwm = fw.getFireworkMeta();
-            fwm.setPower(4);
-            fwm.addEffect(FireworkEffect.builder()
-                    .withColor(Color.BLUE)
-                    .withColor(Color.RED)
-                    .withColor(Color.YELLOW)
-                    .with(FireworkEffect.Type.STAR)
-                    .with(FireworkEffect.Type.BALL)
-                    .with(FireworkEffect.Type.BALL_LARGE)
-                    .flicker(true)
-                    .withTrail()
-                    .build());
-            fw.setFireworkMeta(fwm);
+//            Firework fw = (Firework) world.spawnEntity(taunted.getLocation(), EntityType.FIREWORK_ROCKET);
+//            FireworkMeta fwm = fw.getFireworkMeta();
+//            fwm.setPower(4);
+//            fwm.addEffect(FireworkEffect.builder()
+//                    .withColor(Color.BLUE)
+//                    .withColor(Color.RED)
+//                    .withColor(Color.YELLOW)
+//                    .with(FireworkEffect.Type.STAR)
+//                    .with(FireworkEffect.Type.BALL)
+//                    .with(FireworkEffect.Type.BALL_LARGE)
+//                    .flicker(true)
+//                    .withTrail()
+//                    .build());
+//            fw.setFireworkMeta(fwm);
+//            taunted.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1*20, 2));
+            new BukkitRunnable(){
+                private int counter;
+                @Override
+                public void run() {
+                    if(counter++ > 5) cancel();
+                    ringingSound.play(taunted,2.0f,1.1f);
+                }
+            }.runTaskTimer(Main.getInstance(),0,10);
             Main.getInstance().getGame().broadcastMessage(tauntPrefix + message("TAUNT_ACTIVATE"));
         }
         tauntPlayer = null;
