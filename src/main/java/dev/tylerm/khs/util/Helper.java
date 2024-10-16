@@ -8,9 +8,9 @@ public class Helper {
     public static Location obfuscateLocation(Location location) {
         var rand = ThreadLocalRandom.current();
         return location.clone().add(
-                rand.nextInt(0, 6) - 3,
-                rand.nextInt(0, 6) - 3,
-                rand.nextInt(0, 6) - 3
+                rand.nextInt(0, 16) - 8,
+                rand.nextInt(0, 16) - 8,
+                rand.nextInt(0, 16) - 8
         );
     }
 }

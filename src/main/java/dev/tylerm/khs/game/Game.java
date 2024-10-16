@@ -32,6 +32,7 @@ import dev.tylerm.khs.Main;
 import dev.tylerm.khs.configuration.Map;
 import dev.tylerm.khs.configuration.Maps;
 import dev.tylerm.khs.game.util.WinType;
+import dev.tylerm.khs.util.Helper;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -338,13 +339,12 @@ public class Game {
                     break;
             }
         }
-        if (gameTick % 10 == 0 && gameTick / 10 < whenToHighlight * 20) {
+        if (gameTick % 10 == 0 && gameTimer < whenToHighlight ) {
             for (Player seeker : board.getSeekers()) {
-                for (Entity nearbyEntity : seeker.getNearbyEntities(2, 2, 2)) {
+                for (Entity nearbyEntity : seeker.getNearbyEntities(8, 2, 8)) {
                     if (nearbyEntity instanceof Player player) {
                         if (board.isHider(player)) {
-                            heartbeatSound.play(player.getLocation());
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+                            heartbeatSound.play(Helper.obfuscateLocation(player.getLocation()));
                         }
                     }
                 }

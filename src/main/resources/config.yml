@@ -16,7 +16,7 @@ spawnPatch: false
 gameLength: 300
 
 # The last seconds in the game we'll highlight hiders around seekers.
-whenToHighlight: 10
+whenToHighlight: 30
 
 # How long will be added into the timer when a seeker is found
 extendPerKill: 30
