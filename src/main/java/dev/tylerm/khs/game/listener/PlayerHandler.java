@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static dev.tylerm.khs.configuration.Config.dropItems;
@@ -51,6 +52,13 @@ public class PlayerHandler implements Listener {
         if (!Items.matchItem(item)) return;
         if (dropItems) return;
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onArrowPickup(PlayerPickupArrowEvent event){
+        if (Main.getInstance().getGame().getStatus() == Status.PLAYING) {
+            event.setCancelled(true);
+        }
     }
 
 }

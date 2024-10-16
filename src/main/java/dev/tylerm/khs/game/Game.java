@@ -33,6 +33,7 @@ import dev.tylerm.khs.configuration.Map;
 import dev.tylerm.khs.configuration.Maps;
 import dev.tylerm.khs.game.util.WinType;
 import org.bukkit.*;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -156,6 +157,7 @@ public class Game {
             Main.getInstance().getDatabase().getGameData().addWins(board, players, winners, board.getHiderKills(), board.getHiderDeaths(), board.getSeekerKills(), board.getSeekerDeaths(), type);
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), this::end, endGameDelay * 20);
+        Bukkit.getWorld(currentMap.getGameSpawn().getWorld()).getEntitiesByClass(Arrow.class).forEach(Entity::remove);
     }
 
     public void end() {
@@ -339,8 +341,8 @@ public class Game {
         if (gameTick % 10 == 0 && gameTick / 10 < whenToHighlight * 20) {
             for (Player seeker : board.getSeekers()) {
                 for (Entity nearbyEntity : seeker.getNearbyEntities(2, 2, 2)) {
-                    if(nearbyEntity instanceof Player player){
-                        if(board.isHider(player)){
+                    if (nearbyEntity instanceof Player player) {
+                        if (board.isHider(player)) {
                             heartbeatSound.play(player.getLocation());
                             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
                         }
