@@ -32,9 +32,8 @@ public class Items {
         SEEKER_BOOTS = null;
 
         ConfigurationSection SeekerItems = manager.getConfigurationSection("items.seeker");
-
-        for (int i = 0; i < 9; i++) {
-            ConfigurationSection section = SeekerItems.getConfigurationSection(String.valueOf(i));
+        for (String key : SeekerItems.getKeys(false)) {
+            ConfigurationSection section = SeekerItems.getConfigurationSection(key);
             if (section == null) {
                 SEEKER_ITEMS.add(null);
                 continue;
@@ -82,9 +81,8 @@ public class Items {
         HIDER_BOOTS = null;
 
         ConfigurationSection HiderItems = manager.getConfigurationSection("items.hider");
-
-        for (int i = 0; i < 9; i++) {
-            ConfigurationSection section = HiderItems.getConfigurationSection(String.valueOf(i));
+        for (String key : HiderItems.getKeys(false)) {
+            ConfigurationSection section = HiderItems.getConfigurationSection(key);
             if (section == null) {
                 HIDER_ITEMS.add(null);
                 continue;
@@ -127,25 +125,20 @@ public class Items {
 
         SEEKER_EFFECTS = new ArrayList<>();
         ConfigurationSection SeekerEffects = manager.getConfigurationSection("effects.seeker");
-
-        int i = 1;
-        while (true) {
-            ConfigurationSection section = SeekerEffects.getConfigurationSection(String.valueOf(i));
+        for (String key : SeekerEffects.getKeys(false)) {
+            var section = SeekerEffects.getConfigurationSection(key);
             if (section == null) break;
             PotionEffect effect = getPotionEffect(section);
             if (effect != null) SEEKER_EFFECTS.add(effect);
-            i++;
         }
 
         HIDER_EFFECTS = new ArrayList<>();
         ConfigurationSection HiderEffects = manager.getConfigurationSection("effects.hider");
-        i = 1;
-        while (true) {
-            ConfigurationSection section = HiderEffects.getConfigurationSection(String.valueOf(i));
+        for (String key : HiderEffects.getKeys(false)) {
+            var section = HiderEffects.getConfigurationSection(key);
             if (section == null) break;
             PotionEffect effect = getPotionEffect(section);
             if (effect != null) HIDER_EFFECTS.add(effect);
-            i++;
         }
     }
 
