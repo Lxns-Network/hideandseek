@@ -3,6 +3,7 @@ package dev.tylerm.khs.game.util;
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.messages.ActionBar;
 import dev.tylerm.khs.configuration.Map;
+import dev.tylerm.khs.util.Helper;
 import dev.tylerm.khs.util.packet.BlockChangePacket;
 import dev.tylerm.khs.util.packet.EntityTeleportPacket;
 import dev.tylerm.khs.Main;
@@ -99,6 +100,7 @@ public class Disguise {
                 solid = true;
                 blockLocation = hider.getLocation().getBlock().getLocation();
                 respawnHitbox();
+                onSolidifyChanged(true);
             }
             sendBlockUpdate(blockLocation, material);
         } else if (solid) {
@@ -107,10 +109,37 @@ public class Disguise {
             hitBox.remove();
             hitBox = null;
             sendBlockUpdate(blockLocation, Material.AIR);
+            onSolidifyChanged(false);
         }
         toggleEntityVisibility(block, !solid);
         teleportEntity(hitBox, true);
         teleportEntity(block, solid);
+    }
+
+    private void onSolidifyChanged(boolean solid) {
+        if(solid){
+            var tp = new EntityTeleportPacket();
+            tp.setEntity(getPlayer());
+            // seekers may see a "phantom" when hiders come back to their block.
+            // so obfuscating is a little bit necessary
+            var loc = Helper.obfuscateLocation(getPlayer().getLocation());
+            tp.setX(loc.getX());
+            tp.setY(-66);
+            tp.setZ(loc.getZ());
+            for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
+                tp.send(seeker);
+            }
+        }else{
+            var tp = new EntityTeleportPacket();
+            tp.setEntity(getPlayer());
+            var loc = getPlayer().getLocation();
+            tp.setX(loc.getX());
+            tp.setY(loc.getY());
+            tp.setZ(loc.getZ());
+            for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
+                tp.send(seeker);
+            }
+        }
     }
 
     public void setSolidify(boolean value) {

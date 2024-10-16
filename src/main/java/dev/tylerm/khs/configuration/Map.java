@@ -3,9 +3,8 @@ package dev.tylerm.khs.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.events.Border;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import dev.tylerm.khs.world.WorldLoader;
 import org.bukkit.*;
 import org.bukkit.util.Vector;
@@ -17,10 +16,10 @@ public class Map {
 
     private final String name;
 
-    private dev.tylerm.khs.util.Location
-            spawnPosition = dev.tylerm.khs.util.Location.getDefault(),
-            lobbyPosition = dev.tylerm.khs.util.Location.getDefault(),
-            seekerLobbyPosition = dev.tylerm.khs.util.Location.getDefault();
+    private MyLocation
+            spawnPosition = MyLocation.getDefault(),
+            lobbyPosition = MyLocation.getDefault(),
+            seekerLobbyPosition = MyLocation.getDefault();
 
     private int
             xBoundMin = 0,
@@ -51,15 +50,15 @@ public class Map {
         this.worldLoader = new WorldLoader(this);
     }
 
-    public void setSpawn(dev.tylerm.khs.util.Location pos) {
+    public void setSpawn(MyLocation pos) {
         this.spawnPosition = pos;
     }
 
-    public void setLobby(dev.tylerm.khs.util.Location pos) {
+    public void setLobby(MyLocation pos) {
         this.lobbyPosition = pos;
     }
 
-    public void setSeekerLobby(dev.tylerm.khs.util.Location pos) {
+    public void setSeekerLobby(MyLocation pos) {
         this.seekerLobbyPosition = pos;
     }
 
@@ -96,7 +95,7 @@ public class Map {
     }
 
     @NotNull
-    public dev.tylerm.khs.util.Location getGameSpawn() {
+    public MyLocation getGameSpawn() {
         if (mapSaveEnabled) {
             return spawnPosition.changeWorld("hs_" + name);
         } else {
@@ -113,7 +112,7 @@ public class Map {
     }
 
     @NotNull
-    public dev.tylerm.khs.util.Location getSpawn() {
+    public MyLocation getSpawn() {
         return spawnPosition;
     }
 
@@ -123,7 +122,7 @@ public class Map {
     }
 
     @NotNull
-    public dev.tylerm.khs.util.Location getLobby() {
+    public MyLocation getLobby() {
         return lobbyPosition;
     }
 
@@ -133,7 +132,7 @@ public class Map {
     }
 
     @NotNull
-    public dev.tylerm.khs.util.Location getSeekerLobby() {
+    public MyLocation getSeekerLobby() {
         return seekerLobbyPosition;
     }
 
@@ -143,7 +142,7 @@ public class Map {
     }
 
     @NotNull
-    public Location getGameSeekerLobby() {
+    public MyLocation getGameSeekerLobby() {
         if (mapSaveEnabled) {
             return seekerLobbyPosition.changeWorld("hs_" + name);
         } else {

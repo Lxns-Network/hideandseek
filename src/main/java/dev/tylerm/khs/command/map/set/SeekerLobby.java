@@ -4,7 +4,7 @@ import dev.tylerm.khs.command.location.LocationUtils;
 import dev.tylerm.khs.command.location.Locations;
 import dev.tylerm.khs.command.util.ICommand;
 import dev.tylerm.khs.configuration.*;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import dev.tylerm.khs.configuration.Maps;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -23,7 +23,7 @@ public class SeekerLobby implements ICommand {
             if(!map.getSpawnName().equals(sender.getLocation().getWorld().getName())) {
                 throw new RuntimeException(Localization.message("SEEKER_LOBBY_INVALID").toString());
             }
-            map.setSeekerLobby(Location.from(sender));
+            map.setSeekerLobby(MyLocation.from(sender));
             if(!map.isBoundsNotSetup()) {
                 Vector boundsMin = map.getBoundsMin();
                 Vector boundsMax = map.getBoundsMax();

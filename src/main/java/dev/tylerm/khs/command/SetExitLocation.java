@@ -4,7 +4,7 @@ import dev.tylerm.khs.command.location.LocationUtils;
 import dev.tylerm.khs.command.location.Locations;
 import dev.tylerm.khs.command.util.ICommand;
 import dev.tylerm.khs.configuration.Config;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public class SetExitLocation implements ICommand {
 			Config.addToConfig("exit.y", sender.getLocation().getBlockY());
 			Config.addToConfig("exit.z", sender.getLocation().getBlockZ());
 			Config.addToConfig("exit.world", sender.getLocation().getWorld().getName());
-			Config.exitPosition = Location.from(sender);
+			Config.exitPosition = MyLocation.from(sender);
 			Config.saveConfig();
 		});
 	}

@@ -4,7 +4,7 @@ import dev.tylerm.khs.Main;
 import dev.tylerm.khs.command.util.ICommand;
 import dev.tylerm.khs.configuration.Config;
 import dev.tylerm.khs.configuration.Localization;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Tp implements ICommand {
     public void execute(Player sender, String[] args) {
-        Location test = new Location(args[0], 0, 0,0);
+        MyLocation test = new MyLocation(args[0], 0, 0,0);
         if(!test.exists()) {
             sender.sendMessage(Config.errorPrefix + Localization.message("WORLD_DOESNT_EXIT"));
             return;
@@ -23,7 +23,7 @@ public class Tp implements ICommand {
             sender.sendMessage(Config.errorPrefix + Localization.message("WORLD_LOAD_FAILED"));
             return;
         }
-        Location loc = new Location(world.getName(), world.getSpawnLocation());
+        MyLocation loc = new MyLocation(world.getName(), world.getSpawnLocation());
         loc.teleport(sender);
     }
 

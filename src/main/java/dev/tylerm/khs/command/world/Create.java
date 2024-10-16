@@ -3,7 +3,7 @@ package dev.tylerm.khs.command.world;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.configuration.Config;
 import dev.tylerm.khs.configuration.Localization;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import dev.tylerm.khs.command.util.ICommand;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -46,7 +46,7 @@ public class Create implements ICommand {
                 return;
         }
 
-        Location temp = new Location(args[0], 0, 0, 0);
+        MyLocation temp = new MyLocation(args[0], 0, 0, 0);
 
         if (temp.load(type, environment) == null) {
             sender.sendMessage(Config.errorPrefix + Localization.message("WORLD_ADDED_FAILED"));

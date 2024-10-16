@@ -5,7 +5,7 @@ import dev.tylerm.khs.command.location.Locations;
 import dev.tylerm.khs.command.util.ICommand;
 import dev.tylerm.khs.configuration.Map;
 import dev.tylerm.khs.configuration.Maps;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class Lobby implements ICommand {
 
 	public void execute(Player sender, String[] args) {
 		LocationUtils.setLocation(sender, Locations.LOBBY, args[0], map -> {
-			map.setLobby(Location.from(sender));
+			map.setLobby(MyLocation.from(sender));
 		});
 	}
 

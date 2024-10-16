@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import dev.tylerm.khs.Main;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -101,12 +101,12 @@ public class Maps {
         return map;
     }
 
-    private static Location getSpawn(ConfigurationSection data, String spawn) {
+    private static MyLocation getSpawn(ConfigurationSection data, String spawn) {
         String world = data.getString("spawns."+spawn+".world");
         double x = data.getDouble("spawns."+spawn+".x");
         double y = data.getDouble("spawns."+spawn+".y");
         double z = data.getDouble("spawns."+spawn+".z");
-        return new Location(world, x, y, z);
+        return new MyLocation(world, x, y, z);
     }
 
     private static void saveMaps() {
@@ -138,7 +138,7 @@ public class Maps {
 
     }
 
-    private static void saveSpawn(ConfigurationSection data, Location spawn, String name, Map map) {
+    private static void saveSpawn(ConfigurationSection data, MyLocation spawn, String name, Map map) {
         String worldName = getWorldName(name, map);
         data.set("spawns." + name + ".world", worldName);
         data.set("spawns." + name + ".x", spawn.getX());

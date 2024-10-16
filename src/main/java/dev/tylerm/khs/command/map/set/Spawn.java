@@ -4,7 +4,7 @@ import dev.tylerm.khs.command.location.LocationUtils;
 import dev.tylerm.khs.command.location.Locations;
 import dev.tylerm.khs.command.util.ICommand;
 import dev.tylerm.khs.configuration.*;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import dev.tylerm.khs.configuration.Maps;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -24,7 +24,7 @@ public class Spawn implements ICommand {
 				throw new RuntimeException("World border not enabled or not in valid position!");
 			}
 
-			map.setSpawn(Location.from(sender));
+			map.setSpawn(MyLocation.from(sender));
 
 			if(!map.isBoundsNotSetup()) {
 				Vector boundsMin = map.getBoundsMin();
@@ -36,7 +36,7 @@ public class Spawn implements ICommand {
 
 			if(map.getSeekerLobby().getWorld() != null && !map.getSeekerLobby().getWorld().equals(sender.getLocation().getWorld().getName())) {
 				sender.sendMessage(Config.warningPrefix + Localization.message("SEEKER_LOBBY_SPAWN_RESET"));
-				map.setSeekerLobby(Location.getDefault());
+				map.setSeekerLobby(MyLocation.getDefault());
 			}
 
 			if (!sender.getLocation().getWorld().getName().equals(map.getSpawnName()) && Config.mapSaveEnabled) {

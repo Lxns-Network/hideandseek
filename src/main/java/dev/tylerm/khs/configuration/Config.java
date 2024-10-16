@@ -3,9 +3,8 @@ package dev.tylerm.khs.configuration;
 import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.util.CountdownDisplay;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -116,7 +115,7 @@ public class Config {
     public static CountdownDisplay
             countdownDisplay;
 
-    public static Location
+    public static MyLocation
             exitPosition;
 
     public static void loadConfig() {
@@ -139,7 +138,7 @@ public class Config {
         warningPrefix = config.getString("prefix.warning").replace("&", SYMBOL_STRING);
 
         // Locations
-        exitPosition = new Location(
+        exitPosition = new MyLocation(
                 config.getString("exit.world"),
                 config.getInt("exit.x"),
                 config.getInt("exit.y"),

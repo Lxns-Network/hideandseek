@@ -13,15 +13,15 @@ import java.io.File;
 
 import static dev.tylerm.khs.configuration.Config.spawnPatch;
 
-public class Location {
+public class MyLocation {
 
     private final String world;
     private final double x;
     private final double y;
     private final double z;
 
-    public static Location getDefault() {
-        return new Location(
+    public static MyLocation getDefault() {
+        return new MyLocation(
                 "",
                 0.0,
                 0.0,
@@ -29,9 +29,9 @@ public class Location {
         );
     }
 
-    public static Location from(Player player) {
+    public static MyLocation from(Player player) {
         org.bukkit.Location location = player.getLocation();
-        return new Location(
+        return new MyLocation(
                 player.getWorld().getName(),
                 location.getX(),
                 location.getY(),
@@ -39,14 +39,14 @@ public class Location {
         );
     }
 
-    public Location(@NotNull String world, double x, double y, double z) {
+    public MyLocation(@NotNull String world, double x, double y, double z) {
         this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Location(@NotNull String world, @NotNull org.bukkit.Location location) {
+    public MyLocation(@NotNull String world, @NotNull org.bukkit.Location location) {
         this.world = world;
         this.x = location.getX();
         this.y = location.getY();
@@ -96,8 +96,8 @@ public class Location {
         }
     }
 
-    public Location changeWorld(String world) {
-        return new Location(
+    public MyLocation changeWorld(String world) {
+        return new MyLocation(
                 world,
                 x,
                 y,

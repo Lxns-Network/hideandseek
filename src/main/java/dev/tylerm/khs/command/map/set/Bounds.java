@@ -7,7 +7,7 @@ import dev.tylerm.khs.configuration.Localization;
 import dev.tylerm.khs.configuration.Map;
 import dev.tylerm.khs.configuration.Maps;
 import dev.tylerm.khs.game.util.Status;
-import dev.tylerm.khs.util.Location;
+import dev.tylerm.khs.util.MyLocation;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,13 +75,13 @@ public class Bounds implements ICommand {
 		if(!map.isBoundsNotSetup()) {
 			if(!map.getSpawn().isNotSetup()) {
 				if(map.getSpawn().isNotInBounds(bxs, bxl, bzs, bzl)) {
-					map.setSpawn(Location.getDefault());
+					map.setSpawn(MyLocation.getDefault());
 					sender.sendMessage(Config.warningPrefix + Localization.message("WARN_SPAWN_RESET"));
 				}
 			}
 			if(!map.getSeekerLobby().isNotSetup()) {
 				if(map.getSeekerLobby().isNotInBounds(bxs, bxl, bzs, bzl)) {
-					map.setSeekerLobby(Location.getDefault());
+					map.setSeekerLobby(MyLocation.getDefault());
 					sender.sendMessage(Config.warningPrefix + Localization.message("WARN_SEEKER_SPAWN_RESET"));
 				}
 			}
