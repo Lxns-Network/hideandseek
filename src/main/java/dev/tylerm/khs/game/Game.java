@@ -315,6 +315,7 @@ public class Game {
                 if (hider.getLocation().getWorld() != seeker.getLocation().getWorld()) continue;
                 distance = Math.min(distance, hider.getLocation().distanceSquared(seeker.getLocation()));
             }
+            distance = Math.sqrt(distance);
             if (seekerPing) switch (gameTick % 10) {
                 case 0:
                     if (distance < seekerPingLevel1)
