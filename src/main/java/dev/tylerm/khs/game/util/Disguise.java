@@ -117,7 +117,7 @@ public class Disguise {
     }
 
     private void onSolidifyChanged(boolean solid) {
-        if(solid){
+        if (solid) {
             var tp = new EntityTeleportPacket();
             tp.setEntity(getPlayer());
             // seekers may see a "phantom" when hiders come back to their block.
@@ -129,7 +129,7 @@ public class Disguise {
             for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
                 tp.send(seeker);
             }
-        }else{
+        } else {
             var tp = new EntityTeleportPacket();
             tp.setEntity(getPlayer());
             var loc = getPlayer().getLocation();
@@ -184,8 +184,7 @@ public class Disguise {
                 if (entity instanceof Player p) {
                     receiver.showPlayer(Main.getInstance(), p);
                 } else receiver.showEntity(Main.getInstance(), entity);
-            } else
-            if (entity instanceof Player p) {
+            } else if (entity instanceof Player p) {
                 receiver.hidePlayer(Main.getInstance(), p);
             } else receiver.hideEntity(Main.getInstance(), entity);
             //Main.getInstance().getEntityHider().hideEntity(receiver, entity);
@@ -225,6 +224,13 @@ public class Disguise {
             return;
         }
         if (lastLocation.distance(currentLocation) > .1) {
+            solidifying = false;
+            return;
+        }
+        var pos = currentLocation.getBlock();
+        if (!pos.getType().isAir()
+                && pos.getType() != Material.WATER
+                && (currentLocation.getY() - pos.getY() > 0)) {
             solidifying = false;
             return;
         }
