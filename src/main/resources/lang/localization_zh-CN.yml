@@ -13,7 +13,7 @@ Localization:
   COMMAND_INVALID_ARG: "无效的参数: {AMOUNT}"
   GAME_PLAYER_DEATH: "&c{PLAYER}&f 意外身亡"
   GAME_PLAYER_FOUND: "&e{PLAYER}&f 被找到了！ (+{AMOUNT}秒)"
-  GAME_PLAYER_FOUND_BY: "&c{PLAYER}&f 找到了 &e{PLAYER}&f! (+{AMOUNT}秒)"
+  GAME_PLAYER_FOUND_BY: "&e{PLAYER}&f 被 &c{PLAYER}&f 找到了! (+{AMOUNT}秒)"
   GAME_GAMEOVER_HIDERS_FOUND: "所有方块均已被清除"
   GAME_GAMEOVER_LAST_HIDER: "&e{PLAYER}&f 作为最后一名方块胜利！"
   GAME_GAMEOVER_SEEKERS_QUIT: "所有猎人皆已离开游戏"
