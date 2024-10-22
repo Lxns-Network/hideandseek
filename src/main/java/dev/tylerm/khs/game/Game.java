@@ -310,16 +310,10 @@ public class Game {
 
     private void whilePlaying() {
         for (Player hider : board.getHiders()) {
-            int distance = 100, temp = 100;
+            double distance = 100;
             for (Player seeker : board.getSeekers()) {
-                try {
-                    temp = (int) hider.getLocation().distance(seeker.getLocation());
-                } catch (Exception e) {
-                    //Players in different worlds, NOT OK!!!
-                }
-                if (distance > temp) {
-                    distance = temp;
-                }
+                if (hider.getLocation().getWorld() != seeker.getLocation().getWorld()) continue;
+                distance = Math.min(distance, hider.getLocation().distanceSquared(seeker.getLocation()));
             }
             if (seekerPing) switch (gameTick % 10) {
                 case 0:
@@ -339,7 +333,7 @@ public class Game {
                     break;
             }
         }
-        if (gameTick % 10 == 0 && gameTimer < whenToHighlight ) {
+        if (gameTick % 10 == 0 && gameTimer < whenToHighlight) {
             for (Player seeker : board.getSeekers()) {
                 for (Entity nearbyEntity : seeker.getNearbyEntities(8, 2, 8)) {
                     if (nearbyEntity instanceof Player player) {

@@ -166,6 +166,9 @@ public class Main extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new SkillSelectionGUI.InventoryHandler(), Main.getInstance());
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         long end = System.currentTimeMillis();
+        if (!Bukkit.getServer().getAllowFlight()) {
+            getLogger().severe("Allow flight is set to false. Players may be kicked if they stand on solidifed hiders.");
+        }
         getLogger().info("Finished loading plugin (" + (end - start) + "ms)");
         loaded = true;
     }
@@ -185,7 +188,7 @@ public class Main extends JavaPlugin implements Listener {
                     "&a动力小子",
                     "&c肾上腺素 &fx2 &8[速度 III 5s]"
             );
-            list.add(new HiderSkill(display,List.of(spdyPotion)));
+            list.add(new HiderSkill(display, List.of(spdyPotion)));
         }
         {
             var windCharge = new ItemStack(Material.WIND_CHARGE);
@@ -193,21 +196,27 @@ public class Main extends JavaPlugin implements Listener {
             var display = ItemStacks.of(
                     Material.WIND_CHARGE,
                     "&b弹弓",
-                    "风弹 x4"
+                    "&f风弹 x4"
             );
-            list.add(new HiderSkill(display,List.of(windCharge)));
+            list.add(new HiderSkill(display, List.of(windCharge)));
         }
         {
             var blockChanger = ItemStacks.builder(Material.BLAZE_ROD)
                     .customModelId(CustomItems.BLOCK_CHANGER)
                     .displayName("&d失控魔杖")
+                    .lore("&f随机变成某种方块")
                     .build();
             var display = ItemStacks.of(
                     Material.BLAZE_ROD,
                     "&d我是谁？",
                     "&f随机变成某种方块"
             );
-            list.add(new HiderSkill(display,List.of(blockChanger)));
+            var blindnessWand = ItemStacks.builder(Material.BREEZE_ROD)
+                    .customModelId(CustomItems.BLINDNESS_WAND)
+                    .displayName("&1失明魔杖")
+                    .lore("&f使周围的猎人失明 6s.")
+                    .build();
+            list.add(new HiderSkill(display, List.of(blockChanger, blindnessWand)));
         }
         {
             var seekerVisualizer = ItemStacks.builder(Material.SNOWBALL)
@@ -221,7 +230,7 @@ public class Main extends JavaPlugin implements Listener {
                     "&e\"望眼欲穿\"",
                     "&f看到所有在场猎人的位置 &8x2"
             );
-            list.add(new HiderSkill(display,List.of(seekerVisualizer)));
+            list.add(new HiderSkill(display, List.of(seekerVisualizer)));
         }
         return list;
     }

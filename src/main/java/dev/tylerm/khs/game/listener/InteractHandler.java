@@ -5,7 +5,6 @@ import com.cryptomorin.xseries.messages.ActionBar;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.util.Status;
-import dev.tylerm.khs.gui.BlockPickerGUI;
 import dev.tylerm.khs.item.CustomItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +24,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static dev.tylerm.khs.configuration.Config.*;
 import static dev.tylerm.khs.configuration.Localization.message;
@@ -79,11 +80,16 @@ public class InteractHandler implements Listener {
         switch (CustomItems.getId(temp)) {
             case CustomItems.BLOCK_CHANGER -> {
                 player.getInventory().remove(temp);
-                new BlockPickerGUI(
-                        event.getPlayer(),
-                        Main.getInstance().getGame().getCurrentMap(),
-                        () -> {
-                        });
+                var game = Main.getInstance().getGame();
+                var selectableBlocks = game.getCurrentMap().getBlockHunt();
+                var rand = selectableBlocks.get(ThreadLocalRandom.current().nextInt(selectableBlocks.size()));
+                Main.getInstance().getDisguiser().disguise(player ,rand, game.getCurrentMap());
+            }
+            case CustomItems.BLINDNESS_WAND ->  {
+                player.getInventory().remove(temp);
+                for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
+                    seeker.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 6 * 20, 2));
+                }
             }
             case CustomItems.SEEKER_VISUALIZER -> {
                 var glow = Main.getInstance().getGame().getGlow();
@@ -101,14 +107,14 @@ public class InteractHandler implements Listener {
                         if (p != null)
                             glow.setGlow(user, p, false);
                     }
-                }, 3 * 20);
+                }, 5 * 20);
             }
             case CustomItems.SPEED_POTION -> {
                 temp.setAmount(temp.getAmount() - 1);
                 player.addPotionEffect(new PotionEffect(
                         PotionEffectType.SPEED,
-                        20 * 5,
-                        3
+                        20 * 6,
+                        4
                 ));
             }
         }
