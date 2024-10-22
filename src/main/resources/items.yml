@@ -29,8 +29,6 @@ items:
       material: LEATHER_LEGGINGS
     'boots':
       material: LEATHER_BOOTS
-      enchantments:
-        feather_falling: 4
 
   hider:
     '0':
@@ -50,10 +48,6 @@ items:
       name: '&b击退棍'
       lore:
         - '&f"Combo master!"'
-    'boots':
-      material: LEATHER_BOOTS
-      enchantments:
-        feather_falling: 1
 effects:
   seeker:
     '0':

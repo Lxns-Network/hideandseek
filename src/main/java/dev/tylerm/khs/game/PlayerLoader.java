@@ -90,9 +90,8 @@ public class PlayerLoader {
         loadPlayer(player);
         if (board.isSeeker(player)) {
             if (pvpEnabled) {
-                for (int i = 0; i < Math.min(9, SEEKER_ITEMS.size()-1); i++) {
-                    if (SEEKER_ITEMS.get(i) == null) continue;
-                    player.getInventory().setItem(i, SEEKER_ITEMS.get(i));
+                for (ItemStack seekerItem : SEEKER_ITEMS) {
+                    if(seekerItem!=null) player.getInventory().addItem(seekerItem);
                 }
                 if (Items.SEEKER_HELM != null)
                     player.getInventory().setHelmet(Items.SEEKER_HELM);
@@ -107,9 +106,8 @@ public class PlayerLoader {
                 player.addPotionEffect(effect);
         } else if (board.isHider(player)) {
             if (pvpEnabled) {
-                for (int i = 0; i < Math.min(9, HIDER_ITEMS.size()-1); i++) {
-                    if (HIDER_ITEMS.get(i) == null) continue;
-                    player.getInventory().setItem(i, HIDER_ITEMS.get(i));
+                for (ItemStack item : HIDER_ITEMS) {
+                    if(item!=null)player.getInventory().addItem(item);
                 }
                 if (Items.HIDER_HELM != null)
                     player.getInventory().setHelmet(Items.HIDER_HELM);
