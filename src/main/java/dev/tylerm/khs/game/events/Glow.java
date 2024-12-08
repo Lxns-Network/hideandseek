@@ -1,17 +1,17 @@
 package dev.tylerm.khs.game.events;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import dev.tylerm.khs.util.packet.EntityMetadataPacket;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
 import dev.tylerm.khs.Main;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 import static dev.tylerm.khs.configuration.Config.*;
 
 public class Glow {
-
-    private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-
     private int glowTime;
     private boolean running;
 
@@ -60,13 +60,11 @@ public class Glow {
     }
 
     public void setGlow(Player player, Player target, boolean glowing) {
-
-        EntityMetadataPacket packet = new EntityMetadataPacket();
-        packet.setEntity(target);
-        packet.setGlow(glowing);
-        packet.writeMetadata();
-        packet.send(player);
-
+        var packet = new WrapperPlayServerEntityMetadata(
+                target.getEntityId(),
+                List.of(new EntityData(0, EntityDataTypes.BYTE, glowing ? 0x40 : (byte)0))
+        );
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
     }
 
 }

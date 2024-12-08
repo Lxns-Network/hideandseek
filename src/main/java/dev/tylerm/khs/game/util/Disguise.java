@@ -2,23 +2,19 @@ package dev.tylerm.khs.game.util;
 
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.messages.ActionBar;
-import dev.tylerm.khs.configuration.Map;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.util.Vector3d;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityTeleport;
 import dev.tylerm.khs.util.Helper;
-import dev.tylerm.khs.util.packet.BlockChangePacket;
-import dev.tylerm.khs.util.packet.EntityTeleportPacket;
 import dev.tylerm.khs.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.*;
-import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
-import java.util.HashMap;
 
 @SuppressWarnings("deprecation")
 public class Disguise {
@@ -118,26 +114,32 @@ public class Disguise {
 
     private void onSolidifyChanged(boolean solid) {
         if (solid) {
-            var tp = new EntityTeleportPacket();
-            tp.setEntity(getPlayer());
+            var loc = Helper.obfuscateLocation(getPlayer().getLocation());
+            var vec = new Vector3d(loc.getX(), -66.0, loc.getZ());
+            var tp = new WrapperPlayServerEntityTeleport(
+                    getPlayer().getEntityId(),
+                    new com.github.retrooper.packetevents.protocol.world.Location(
+                            vec, loc.getYaw(), loc.getPitch()
+                    ),
+                    true
+            );
             // seekers may see a "phantom" when hiders come back to their block.
             // so obfuscating is a little bit necessary
-            var loc = Helper.obfuscateLocation(getPlayer().getLocation());
-            tp.setX(loc.getX());
-            tp.setY(-66);
-            tp.setZ(loc.getZ());
             for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
-                tp.send(seeker);
+                PacketEvents.getAPI().getPlayerManager().sendPacket(seeker, tp);
             }
         } else {
-            var tp = new EntityTeleportPacket();
-            tp.setEntity(getPlayer());
             var loc = getPlayer().getLocation();
-            tp.setX(loc.getX());
-            tp.setY(loc.getY());
-            tp.setZ(loc.getZ());
+            var tp = new WrapperPlayServerEntityTeleport(
+                    getPlayer().getEntityId(),
+                    new com.github.retrooper.packetevents.protocol.world.Location(
+                            new Vector3d(loc.getX(), loc.getY(),loc.getZ()),
+                            loc.getYaw(), loc.getPitch()
+                    ),
+                    getPlayer().isOnGround()
+            );
             for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
-                tp.send(seeker);
+                PacketEvents.getAPI().getPlayerManager().sendPacket(seeker, tp);
             }
         }
     }
@@ -147,19 +149,16 @@ public class Disguise {
     }
 
     private void sendBlockUpdate(Location location, Material material) {
-        BlockChangePacket packet = new BlockChangePacket();
-        packet.setBlockPosition(location);
-        packet.setMaterial(material);
+        var data = material.createBlockData();
         Bukkit.getOnlinePlayers().forEach(receiver -> {
             if (receiver.getName().equals(hider.getName())) return;
-            packet.send(receiver);
+            receiver.sendBlockChange(location, data);
         });
     }
 
     private void teleportEntity(Entity entity, boolean center) {
         if (entity == null) return;
-        EntityTeleportPacket packet = new EntityTeleportPacket();
-        packet.setEntity(entity);
+        WrapperPlayServerEntityTeleport packet;
         double x, y, z;
         if (center) {
             x = Math.round(hider.getLocation().getX() + .5) - .5;
@@ -170,10 +169,9 @@ public class Disguise {
             y = hider.getLocation().getY();
             z = hider.getLocation().getZ();
         }
-        packet.setX(x);
-        packet.setY(y);
-        packet.setZ(z);
-        Bukkit.getOnlinePlayers().forEach(packet::send);
+        var pos = entity.getLocation();
+        packet = new WrapperPlayServerEntityTeleport(entity.getEntityId(),new Vector3d(x,y,z),pos.getYaw(),pos.getPitch(),entity.isOnGround());
+        Bukkit.getOnlinePlayers().forEach(p -> PacketEvents.getAPI().getPlayerManager().sendPacket(p, packet));
     }
 
     private void toggleEntityVisibility(Entity entity, boolean show) {

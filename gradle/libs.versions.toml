@@ -2,7 +2,7 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-com-comphenix-protocol-protocollib = "5.1.0"
+packetevents = "2.6.0"
 com-github-cryptomorin-xseries = "11.3.0"
 com-zaxxer-hikaricp = "4.0.3"
 me-clip-placeholderapi = "2.11.6"
@@ -14,7 +14,7 @@ canvas = "1.7.0-SNAPSHOT"
 
 
 [libraries]
-com-comphenix-protocol-protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "com-comphenix-protocol-protocollib" }
+retrooper-packetevents = {module = "com.github.retrooper:packetevents-spigot", version.ref="packetevents" }
 com-github-cryptomorin-xseries = { module = "com.github.cryptomorin:XSeries", version.ref = "com-github-cryptomorin-xseries" }
 com-zaxxer-hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "com-zaxxer-hikaricp" }
 me-clip-placeholderapi = { module = "me.clip:placeholderapi", version.ref = "me-clip-placeholderapi" }

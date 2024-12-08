@@ -16,7 +16,7 @@ repositories {
     }
 
     maven {
-        url = uri('https://repo.dmulloy2.net/repository/public/')
+        url = uri('https://repo.codemc.io/repository/maven-releases/')
     }
 
     maven {
@@ -36,13 +36,14 @@ dependencies {
     compileOnly libs.org.xerial.sqlite.jdbc
     compileOnly libs.org.mariadb.jdbc.mariadb.java.client
     compileOnly libs.org.spigotmc.spigot.api
-    compileOnly libs.com.comphenix.protocol.protocollib
+    api libs.retrooper.packetevents
     compileOnly libs.me.clip.placeholderapi
 }
 
 shadowJar {
-  relocate 'com.cryptomorin.xseries', 'dev.tylerm.depend.xseries'
-  relocate 'com.zaxxer.hikari', 'dev.tylerm.depend.hikari'
+  relocate 'com.cryptomorin.xseries', 'khs.relocation.xseries'
+  relocate 'com.zaxxer.hikari', 'khs.relocation.hikari'
+  relocate 'com.github.retrooper', 'khs.relocation.retrooper'
 }
 
 publishing {

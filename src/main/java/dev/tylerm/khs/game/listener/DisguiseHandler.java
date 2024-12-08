@@ -1,17 +1,13 @@
 package dev.tylerm.khs.game.listener;
 
-import static com.comphenix.protocol.PacketType.Play.Client.*;
-
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.WrappedEnumEntityUseAction;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.util.Disguise;
-import dev.tylerm.khs.game.util.Status;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
@@ -23,7 +19,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.ArrayList;
@@ -31,10 +26,8 @@ import java.util.List;
 
 public class DisguiseHandler implements Listener {
 
-    private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-
     public DisguiseHandler() {
-        protocolManager.addPacketListener(createProtocol());
+        PacketEvents.getAPI().getEventManager().registerListener(createProtocol(), PacketListenerPriority.NORMAL);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -49,24 +42,22 @@ public class DisguiseHandler implements Listener {
         disguise.startSolidifying();
     }
 
-    private PacketAdapter createProtocol() {
-        return new PacketAdapter(Main.getInstance(), USE_ENTITY) {
-
+    private PacketListener createProtocol() {
+        return new PacketListener(){
             @Override
-            public void onPacketReceiving(PacketEvent event) {
-                PacketContainer packet = event.getPacket();
-
+            public void onPacketReceive(PacketReceiveEvent event) {
+                if(event.getPacketType() != PacketType.Play.Client.INTERACT_ENTITY) return;
+                var packet = new WrapperPlayClientInteractEntity(event);
+                var action = packet.getAction();
                 // only left click attacks
                 //EnumWrappers.EntityUseAction action = packet.getEntityUseActions().getValues().stream().findFirst().orElse(null);
-                var action = packet.getEnumEntityUseActions().getValues().stream().findFirst().orElse(null);
-                if (action == null || action.getAction() != EnumWrappers.EntityUseAction.ATTACK) return;
+                if(action != WrapperPlayClientInteractEntity.InteractAction.ATTACK) return;
                 //noinspection ComparatorResultComparison
-                if (action.getAction().compareTo(EnumWrappers.EntityUseAction.INTERACT) == 2) {
-                    return;
-                }
+                // iceBear: Idk what is this but it works anyfucks
+                if(action.compareTo(WrapperPlayClientInteractEntity.InteractAction.INTERACT) == 2) return;
 
                 Player player = event.getPlayer();
-                int id = packet.getIntegers().read(0);
+                int id = packet.getEntityId();
                 Disguise disguise = Main.getInstance().getDisguiser().getByEntityID(id);
                 if (disguise == null) disguise = Main.getInstance().getDisguiser().getByHitBoxID(id);
                 if (disguise == null) return;

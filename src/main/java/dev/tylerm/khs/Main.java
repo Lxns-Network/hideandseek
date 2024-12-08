@@ -1,6 +1,7 @@
 package dev.tylerm.khs;
 
 import com.cryptomorin.xseries.XItemStack;
+import com.github.retrooper.packetevents.PacketEvents;
 import dev.tylerm.khs.command.*;
 import dev.tylerm.khs.command.map.Debug;
 import dev.tylerm.khs.command.map.GoTo;
@@ -26,6 +27,7 @@ import dev.tylerm.khs.command.world.Tp;
 import dev.tylerm.khs.database.Database;
 import dev.tylerm.khs.command.util.CommandGroup;
 import dev.tylerm.khs.util.item.ItemStacks;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -50,7 +52,6 @@ import static dev.tylerm.khs.configuration.Localization.message;
 public class Main extends JavaPlugin implements Listener {
 
     private static Main instance;
-
     private Database database;
     private Board board;
     private Disguiser disguiser;
@@ -61,7 +62,8 @@ public class Main extends JavaPlugin implements Listener {
 
 
     public void onEnable() {
-
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().load();
         long start = System.currentTimeMillis();
 
         getLogger().info("Loading Kenshin's Hide and Seek");
@@ -98,6 +100,7 @@ public class Main extends JavaPlugin implements Listener {
         this.disguiser = new Disguiser();
         getLogger().info("Registering listeners...");
         this.registerListeners();
+        PacketEvents.getAPI().init();
 
         getLogger().info("Registering commands...");
         this.commandGroup = new CommandGroup("hs",
@@ -250,6 +253,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        PacketEvents.getAPI().terminate();
     }
 
     private void onTick() {
