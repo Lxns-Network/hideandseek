@@ -21,6 +21,8 @@ public class JoinLeaveHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
+        var map = Main.getInstance().getEntityIdToUUID();
+        map.put(event.getPlayer().getEntityId(), event.getPlayer().getUniqueId());
         if(!Main.getInstance().getDatabase().getNameData().update(event.getPlayer().getUniqueId(), event.getPlayer().getName())){
             Main.getInstance().getLogger().warning("Failed to save name data for user: " + event.getPlayer().getName());
         }
@@ -68,6 +70,7 @@ public class JoinLeaveHandler implements Listener {
     }
 
     private void handleLeave(Player player) {
+        Main.getInstance().getEntityIdToUUID().remove(player.getEntityId());
         if(!Main.getInstance().getBoard().contains(player)) return;
         PlayerLoader.unloadPlayer(player);
         Main.getInstance().getBoard().remove(player);

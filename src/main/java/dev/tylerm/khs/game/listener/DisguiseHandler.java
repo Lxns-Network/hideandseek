@@ -4,10 +4,18 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.event.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientHeldItemChange;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityEquipment;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerHeldItemChange;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUpdateAttributes;
 import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.util.Disguise;
+import dev.tylerm.khs.game.util.Status;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
@@ -35,7 +43,6 @@ public class DisguiseHandler implements Listener {
         final Player player = event.getPlayer();
         final Disguise disguise = Main.getInstance().getDisguiser().getDisguise(player);
         if (disguise == null) return;
-        ;
         if (event.getFrom().distance(event.getTo()) > .1) {
             disguise.setSolidify(false);
         }
@@ -44,6 +51,22 @@ public class DisguiseHandler implements Listener {
 
     private PacketListener createProtocol() {
         return new PacketListener(){
+            @Override
+            public void onPacketSend(PacketSendEvent event) {
+                var type = event.getPacketType();
+                if(type != PacketType.Play.Server.ENTITY_EQUIPMENT) return;
+                var _player = event.getPlayer();
+                if(_player == null) return;
+                var player = PacketEvents.getAPI().getPlayerManager().getUser(event.getPlayer());
+                if(player == null) return;
+                var packet = new WrapperPlayServerEntityEquipment(event);
+                var uuid = Main.getInstance().getEntityIdToUUID().get(packet.getEntityId());
+                var isHider = Main.getInstance().getBoard().isHider(uuid);
+                if(isHider){
+                   event.setCancelled(true);
+                }
+           }
+
             @Override
             public void onPacketReceive(PacketReceiveEvent event) {
                 if(event.getPacketType() != PacketType.Play.Client.INTERACT_ENTITY) return;

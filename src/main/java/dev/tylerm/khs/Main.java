@@ -43,6 +43,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,6 +62,7 @@ public class Main extends JavaPlugin implements Listener {
     private CommandGroup commandGroup;
     private List<HiderSkill> hiderSkills;
     private boolean loaded;
+    private java.util.Map<Integer, UUID> entityIdToUUID = new ConcurrentHashMap<>();
 
 
     public void onEnable() {
@@ -174,6 +178,10 @@ public class Main extends JavaPlugin implements Listener {
         }
         getLogger().info("Finished loading plugin (" + (end - start) + "ms)");
         loaded = true;
+    }
+
+    public Map<Integer, UUID> getEntityIdToUUID() {
+        return entityIdToUUID;
     }
 
     private List<HiderSkill> loadSkills() {
