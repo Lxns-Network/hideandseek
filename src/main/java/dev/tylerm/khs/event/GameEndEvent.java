@@ -17,8 +17,13 @@ public class GameEndEvent extends Event {
         return type;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
+
 }

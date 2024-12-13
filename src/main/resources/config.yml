@@ -16,10 +16,10 @@ spawnPatch: false
 gameLength: 300
 
 # The last seconds in the game we'll highlight hiders around seekers.
-whenToHighlight: 30
+whenToHighlight: 20
 
 # How long will be added into the timer when a seeker is found
-extendPerKill: 30
+extendPerKill: 10
 
 # How long in seconds will the initial hiding period last, minimum is 10 seconds
 # default: 30
