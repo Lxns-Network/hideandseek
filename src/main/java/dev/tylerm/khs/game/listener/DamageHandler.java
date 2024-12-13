@@ -2,6 +2,7 @@ package dev.tylerm.khs.game.listener;
 
 import com.cryptomorin.xseries.XSound;
 import dev.tylerm.khs.Main;
+import dev.tylerm.khs.event.PlayerKillEvent;
 import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.Game;
 import dev.tylerm.khs.game.PlayerLoader;
@@ -93,6 +94,17 @@ public class DamageHandler implements Listener {
         if (pvpEnabled && player.getHealth() - event.getFinalDamage() >= 0.5) return;
         // Handle death event
         event.setCancelled(true);
+        // icybear: post death event
+        {
+            var killer = event.getDamageSource().getCausingEntity();
+            Player k = null;
+            if(killer instanceof Player a){
+                k = a;
+            }
+            var killEvent = new PlayerKillEvent(player, k);
+            Bukkit.getServer().getPluginManager().callEvent(killEvent);
+            if(killEvent.isCancelled()) return;
+        }
         // Play death effect
         XSound.ENTITY_PLAYER_DEATH.play(player, 1, 1);
         // Reveal player if they are disguised

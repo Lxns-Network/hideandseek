@@ -23,6 +23,7 @@ import com.cryptomorin.xseries.messages.ActionBar;
 import com.cryptomorin.xseries.messages.Titles;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.tylerm.khs.event.GameEndEvent;
 import dev.tylerm.khs.game.events.Glow;
 import dev.tylerm.khs.game.events.Taunt;
 import dev.tylerm.khs.game.listener.RespawnHandler;
@@ -159,6 +160,7 @@ public class Game {
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), this::end, endGameDelay * 20);
         Bukkit.getWorld(currentMap.getGameSpawn().getWorld()).getEntitiesByClass(Arrow.class).forEach(Entity::remove);
+        Bukkit.getServer().getPluginManager().callEvent(new GameEndEvent(type));
     }
 
     public void end() {
