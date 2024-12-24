@@ -36,7 +36,8 @@ public class SkillSelectionGUI implements InventoryHolder {
 
     public SkillSelectionGUI(Player player, List<HiderSkill> skills, Runnable nextAction) {
         this.nextAction = nextAction;
-        this.inventory = Bukkit.createInventory(this, Math.ceilDiv(skills.size(), 9) * 9);
+        this.inventory = Bukkit.createInventory(this, Math.ceilDiv(skills.size(), 9) * 9, "选择技能");
+
         this.skills = skills.isEmpty() ? Collections.singletonList(NONE) : skills;
         for (HiderSkill skill : skills) {
             inventory.addItem(skill.display());

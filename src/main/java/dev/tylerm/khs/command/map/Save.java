@@ -57,7 +57,7 @@ public class Save implements ICommand {
 				runningBackup = false;
 			}
 		};
-		runnable.runTaskAsynchronously(Main.getInstance());
+		runnable.runTask(Main.getInstance());
 		runningBackup = true;
 	}
 

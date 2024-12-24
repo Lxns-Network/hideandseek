@@ -19,6 +19,7 @@ import dev.tylerm.khs.game.util.Status;
 import dev.tylerm.khs.gui.BlockPickerGUI;
 import dev.tylerm.khs.gui.SkillSelectionGUI;
 import dev.tylerm.khs.item.CustomItems;
+import dev.tylerm.khs.task.AnnounceBlockTypeTask;
 import dev.tylerm.khs.util.PAPIExpansion;
 import dev.tylerm.khs.command.map.blockhunt.Enabled;
 import dev.tylerm.khs.command.world.Create;
@@ -35,7 +36,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.ipvp.canvas.MenuFunctionListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +67,7 @@ public class Main extends JavaPlugin implements Listener {
     private CommandGroup commandGroup;
     private List<HiderSkill> hiderSkills;
     private boolean loaded;
-    private java.util.Map<Integer, UUID> entityIdToUUID = new ConcurrentHashMap<>();
+    private Map<Integer, UUID> entityIdToUUID = new ConcurrentHashMap<>();
 
 
     public void onEnable() {
@@ -79,7 +84,7 @@ public class Main extends JavaPlugin implements Listener {
 
         try {
             getLogger().info("Loading config.yml...");
-            Config.loadConfig();
+            loadConfig();
             getLogger().info("Loading maps.yml...");
             Maps.loadMaps();
             getLogger().info("Loading localization.yml...");
@@ -178,6 +183,7 @@ public class Main extends JavaPlugin implements Listener {
         }
         getLogger().info("Finished loading plugin (" + (end - start) + "ms)");
         loaded = true;
+        new AnnounceBlockTypeTask().runTaskTimer(this, 0L, 60*20L);
     }
 
     public Map<Integer, UUID> getEntityIdToUUID() {
@@ -188,61 +194,74 @@ public class Main extends JavaPlugin implements Listener {
         var list = new ArrayList<HiderSkill>();
         // 动力小子
         {
-            var spdyPotion = ItemStacks.builder(Material.POTION)
+            var spdyPotion = ItemStacks.builder(Material.SPLASH_POTION)
                     .customModelId(CustomItems.SPEED_POTION)
                     .displayName("&c肾上腺素")
-                    .lore("&f速度 III 5s")
+                    .lore("&f速度 III 8s")
                     .build();
             spdyPotion.setAmount(2);
             var display = ItemStacks.of(
-                    Material.BOW,
+                    Material.SPLASH_POTION,
                     "&a动力小子",
-                    "&c肾上腺素 &fx2 &8[速度 III 5s]"
+                    "&c肾上腺素 &fx2 &8[速度 III 8s]"
             );
             list.add(new HiderSkill(display, List.of(spdyPotion)));
         }
         {
             var windCharge = new ItemStack(Material.WIND_CHARGE);
-            windCharge.setAmount(4);
+            windCharge.setAmount(2);
             var display = ItemStacks.of(
                     Material.WIND_CHARGE,
                     "&b弹弓",
-                    "&f风弹 x4"
+                    "&f风弹 x4",
+                    "&a砸中别人会很痛。"
             );
             list.add(new HiderSkill(display, List.of(windCharge)));
         }
         {
             var blockChanger = ItemStacks.builder(Material.BLAZE_ROD)
                     .customModelId(CustomItems.BLOCK_CHANGER)
-                    .displayName("&d失控魔杖")
-                    .lore("&f随机变成某种方块")
+                    .displayName("&d换装魔杖")
+                    .lore("&a和在场的某个方块交换类型")
                     .build();
             var display = ItemStacks.of(
                     Material.BLAZE_ROD,
-                    "&d我是谁？",
-                    "&f随机变成某种方块"
+                    "&d换装秀",
+                    "&f换装魔杖 x1",
+                    "&a和在场的某个方块交换类型"
             );
-            var blindnessWand = ItemStacks.builder(Material.BREEZE_ROD)
-                    .customModelId(CustomItems.BLINDNESS_WAND)
-                    .displayName("&1失明魔杖")
-                    .lore("&f使周围的猎人失明 6s.")
-                    .build();
-            list.add(new HiderSkill(display, List.of(blockChanger, blindnessWand)));
+            list.add(new HiderSkill(display, List.of(blockChanger)));
         }
         {
-            var seekerVisualizer = ItemStacks.builder(Material.SNOWBALL)
-                    .customModelId(CustomItems.SEEKER_VISUALIZER)
-                    .displayName("&e\"望眼欲穿\"")
-                    .lore("&f给所有在场猎人 3s 高亮，仅自己可见")
+            var owl = ItemStacks.builder(Material.BOW)
+                    .customModelId(CustomItems.OWL_BOW_MARKER)
+                    .displayName("&b蜜鸟")
+                    .lore("&a击中的生物将会留下印记。")
                     .build();
-            seekerVisualizer.setAmount(2);
             var display = ItemStacks.of(
-                    Material.SPYGLASS,
-                    "&e\"望眼欲穿\"",
-                    "&f看到所有在场猎人的位置 &8x2"
+                    Material.BOW,
+                    "&b蜜鸟",
+                    "&f蜜鸟之弓 x1",
+                    "&f箭矢 x8",
+                    "&f射中目标时，在原地产生蜂鸣信号吸引其他人，不造成伤害。",
+                    "&a蜜鸟通过发出鸣叫或其他信号，指引人类找到蜂巢。"
             );
-            list.add(new HiderSkill(display, List.of(seekerVisualizer)));
+            list.add(new HiderSkill(display, List.of(owl, new ItemStack(Material.ARROW, 8))));
         }
+//        {
+//            var seekerVisualizer = ItemStacks.builder(Material.SNOWBALL)
+//                    .customModelId(CustomItems.SEEKER_VISUALIZER)
+//                    .displayName("&e\"望眼欲穿\"")
+//                    .lore("&f给所有在场猎人 3s 高亮，仅自己可见")
+//                    .build();
+//            seekerVisualizer.setAmount(2);
+//            var display = ItemStacks.of(
+//                    Material.SPYGLASS,
+//                    "&e\"望眼欲穿\"",
+//                    "&f看到所有在场猎人的位置 &8x2"
+//            );
+//            list.add(new HiderSkill(display, List.of(seekerVisualizer)));
+//        }
         return list;
     }
 
@@ -319,7 +338,7 @@ public class Main extends JavaPlugin implements Listener {
         return true;
     }
 
-    public java.util.List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(errorPrefix + message("COMMAND_PLAYER_ONLY"));
             return new ArrayList<>();
@@ -355,8 +374,8 @@ public class Main extends JavaPlugin implements Listener {
         return commandGroup;
     }
 
-    public java.util.List<String> getWorlds() {
-        java.util.List<String> worlds = new ArrayList<>();
+    public List<String> getWorlds() {
+        List<String> worlds = new ArrayList<>();
         File[] containers = getWorldContainer().listFiles();
         if (containers != null) {
             Arrays.stream(containers).forEach(file -> {

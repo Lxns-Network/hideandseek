@@ -6,6 +6,8 @@ import dev.tylerm.khs.Main;
 import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.util.Status;
 import dev.tylerm.khs.item.CustomItems;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -14,11 +16,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -79,13 +83,35 @@ public class InteractHandler implements Listener {
         var player = event.getPlayer();
         switch (CustomItems.getId(temp)) {
             case CustomItems.BLOCK_CHANGER -> {
-                player.getInventory().remove(temp);
                 var game = Main.getInstance().getGame();
                 var selectableBlocks = game.getCurrentMap().getBlockHunt();
-                var rand = selectableBlocks.get(ThreadLocalRandom.current().nextInt(selectableBlocks.size()));
-                Main.getInstance().getDisguiser().disguise(player ,rand, game.getCurrentMap());
+                // find a block
+                var hiders = Main.getInstance().getBoard().getHiders();
+                if (hiders.size() == 1) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "已经没有其他方块在场了！");
+                    return;
+                }
+                player.getInventory().remove(temp);
+                var otherHiders = new ArrayList<>(hiders);
+                otherHiders.remove(player);
+                var selected = otherHiders.get(ThreadLocalRandom.current().nextInt(otherHiders.size()));
+                var targetDisguise = Main.getInstance().getDisguiser().getDisguise(selected);
+                var currentDisguise = Main.getInstance().getDisguiser().getDisguise(player);
+                Main.getInstance().getDisguiser().disguise(player, targetDisguise.getMaterial(), game.getCurrentMap());
+                Main.getInstance().getDisguiser().disguise(selected, currentDisguise.getMaterial(), game.getCurrentMap());
+                var text = TextComponent.fromLegacy(ChatColor.LIGHT_PURPLE + player.getName() + " 和你互换了方块类型，你现在变成了 ");
+                text.addExtra(new TranslatableComponent(currentDisguise.getMaterial().getBlockTranslationKey()));
+                text.addExtra("!");
+                selected.spigot().sendMessage(text);
+                text = TextComponent.fromLegacy(ChatColor.LIGHT_PURPLE + "你现在变成了 ");
+                text.addExtra(new TranslatableComponent(targetDisguise.getMaterial().getBlockTranslationKey()));
+                text.addExtra("!");
+                player.spigot().sendMessage(text); //todo test 换装
+
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2 * 20, 1));
+                selected.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2 * 20, 1));
             }
-            case CustomItems.BLINDNESS_WAND ->  {
+            case CustomItems.BLINDNESS_WAND -> {
                 player.getInventory().remove(temp);
                 for (Player seeker : Main.getInstance().getBoard().getSeekers()) {
                     seeker.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 6 * 20, 2));
@@ -110,13 +136,36 @@ public class InteractHandler implements Listener {
                 }, 5 * 20);
             }
             case CustomItems.SPEED_POTION -> {
+                event.setCancelled(true);
                 temp.setAmount(temp.getAmount() - 1);
                 player.addPotionEffect(new PotionEffect(
                         PotionEffectType.SPEED,
-                        20 * 6,
-                        4
+                        20 * 8,
+                        3
                 ));
+                player.sendMessage(ChatColor.RED+"你被加速了，快跑！");
             }
+
+        }
+    }
+
+    @EventHandler
+    public void onShoot(ProjectileLaunchEvent event) {
+        if (Main.getInstance().getGame().getStatus() != Status.PLAYING) {
+            return;
+        }
+        var shooter = event.getEntity().getShooter();
+        if (!(shooter instanceof Player p)) {
+            return;
+        }
+        var eq = p.getEquipment();
+        if (eq == null) return;
+        var item = eq.getItemInMainHand();
+        var meta = item.getItemMeta();
+        if (meta == null) return;
+        if(!meta.hasCustomModelData()) return;
+        if (meta.getCustomModelData() == CustomItems.OWL_BOW_MARKER) {
+            event.getEntity().setMetadata(CustomItems.OWL_BOW_METADATA_KEY, new FixedMetadataValue(Main.getInstance(), true));
         }
     }
 

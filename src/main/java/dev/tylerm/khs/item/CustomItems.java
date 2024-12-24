@@ -11,7 +11,9 @@ public class CustomItems {
     public static final int SPEED_POTION = 10;
     public static final int BLOCK_CHANGER = 11;
     public static final int SEEKER_VISUALIZER = 12;
+    public static final int OWL_BOW_MARKER = 14;
     public static final int BLINDNESS_WAND = 13;
+    public static final String OWL_BOW_METADATA_KEY = "owl_bow";
 
     public static int getId(ItemStack stack){
         if(stack.getItemMeta() == null || !stack.getItemMeta().hasCustomModelData()) return -1;

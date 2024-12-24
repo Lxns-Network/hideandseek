@@ -7,15 +7,18 @@ import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.Game;
 import dev.tylerm.khs.game.PlayerLoader;
 import dev.tylerm.khs.game.util.Status;
+import dev.tylerm.khs.item.CustomItems;
+import dev.tylerm.khs.task.SpecialArrowTaunt;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -23,6 +26,36 @@ import static dev.tylerm.khs.configuration.Config.*;
 import static dev.tylerm.khs.configuration.Localization.message;
 
 public class DamageHandler implements Listener {
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event) {
+        if (Main.getInstance().getGame().getStatus() != Status.PLAYING) {
+            return;
+        }
+        var directEntity = event.getEntity();
+        var hitEntity = event.getHitEntity();
+        var hitBlock = event.getHitBlock();
+
+        if(hitBlock != null && directEntity.hasMetadata(CustomItems.OWL_BOW_METADATA_KEY)){
+            new SpecialArrowTaunt(hitBlock.getLocation().add(0,1,0), 32).runTaskTimer(Main.getInstance(), 0L, 5L);
+            directEntity.remove();
+            return;
+        }
+
+        if(hitEntity instanceof Player player){
+            if(Main.getInstance().getBoard().isHider(player)){
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                    player.setArrowsInBody(0);
+                }, 10L);
+            }
+            if (directEntity instanceof WindCharge) {
+                if (player != directEntity.getShooter() && player.getHealth() > 6.5) {
+                    player.setHealth(player.getHealth() - 6.5);
+                    //todo: test 风弹伤害
+                    return;
+                }
+            }
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
@@ -47,6 +80,17 @@ public class DamageHandler implements Listener {
         }
         // Makes sure that if there was an attacking player, that the event is allowed for the game
         if (attacker != null) {
+            if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+                var directEntity = event.getDamageSource().getDirectEntity();
+                if (directEntity instanceof Arrow arrow) {
+                    if (arrow.hasMetadata(CustomItems.OWL_BOW_METADATA_KEY)) {
+                        new SpecialArrowTaunt(player.getLocation(), 32)
+                                .runTaskTimer(Main.getInstance(), 0L, 5L);
+                        event.setDamage(0);
+                        return;
+                    }
+                }
+            }
             // Cancel if one player is in the game but other isn't
             if ((board.contains(player) && !board.contains(attacker)) || (!board.contains(player) && board.contains(attacker))) {
                 event.setCancelled(true);
@@ -55,7 +99,10 @@ public class DamageHandler implements Listener {
             } else if (!board.contains(player) && !board.contains(attacker)) {
                 return;
                 // Ignore event if players are on the same team, or one of them is a spectator
-            } else if (board.onSameTeam(player, attacker) || board.isSpectator(player) || board.isSpectator(attacker)) {
+            } else if (board.onSameTeam(player, attacker)) {
+                event.setCancelled(true);
+                return;
+            } else if (board.isSpectator(player) || board.isSpectator(attacker)) {
                 event.setCancelled(true);
                 return;
                 // Ignore the event if pvp is disabled, and a hider is trying to attack a seeker
@@ -87,23 +134,24 @@ public class DamageHandler implements Listener {
         if (blindnessWhenHit > 0 && pvpEnabled
                 && board.isSeeker(player) &&
                 attacker != null && board.isHider(attacker)) {
-            // icybear: give hider blindness effect when hit
+            // icybear: give seeker blindness effect when hit
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, blindnessWhenHit, 1));
         }
         // Check if player dies (pvp mode)
         if (pvpEnabled && player.getHealth() - event.getFinalDamage() >= 0.5) return;
         // Handle death event
         event.setCancelled(true);
+
         // icybear: post death event
         {
             var killer = event.getDamageSource().getCausingEntity();
             Player k = null;
-            if(killer instanceof Player a){
+            if (killer instanceof Player a) {
                 k = a;
             }
             var killEvent = new PlayerKillEvent(player, k);
             Bukkit.getServer().getPluginManager().callEvent(killEvent);
-            if(killEvent.isCancelled()) return;
+            if (killEvent.isCancelled()) return;
         }
         // Play death effect
         XSound.ENTITY_PLAYER_DEATH.play(player, 1, 1);
@@ -149,6 +197,7 @@ public class DamageHandler implements Listener {
         }
         board.reloadBoardTeams();
     }
+
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {

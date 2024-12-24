@@ -68,6 +68,10 @@ public class Disguise {
         return hitBox.getEntityId();
     }
 
+    public Material getMaterial() {
+        return material;
+    }
+
     public Player getPlayer() {
         return hider;
     }

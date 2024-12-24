@@ -24,12 +24,12 @@ public class ChatHandler implements Listener {
                 Bukkit.broadcastMessage(
                         ChatColor.BOLD +
                                 (board.isHider(event.getPlayer()) ?
-                                        ChatColor.GOLD + "[BLOCK] "
+                                        ChatColor.GOLD + "BLOCK "
                                         : ChatColor.BLUE + "SEEKER ")
-                                + ChatColor.WHITE + event.getPlayer().getName() + ": " + ChatColor.GRAY + event.getMessage());
+                                + ChatColor.WHITE + event.getPlayer().getName() + ": " + event.getMessage());
             } else {
                 Bukkit.broadcastMessage(
-                        event.getPlayer().getName() + ": " + ChatColor.GRAY + event.getMessage()
+                        event.getPlayer().getName() + ": "  + event.getMessage()
                 );
             }
         }

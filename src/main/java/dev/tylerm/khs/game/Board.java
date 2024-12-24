@@ -6,6 +6,9 @@ import dev.tylerm.khs.game.events.Glow;
 import dev.tylerm.khs.game.events.Taunt;
 import dev.tylerm.khs.game.util.Status;
 import dev.tylerm.khs.Main;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -414,8 +417,8 @@ class CustomBoard {
         }
         hiderTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         seekerTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-        hiderTeam.setPrefix(message("HIDER_TEAM_NAME").toString() + " " + ChatColor.RESET);
-        seekerTeam.setPrefix(message("SEEKER_TEAM_NAME").toString() + " " + ChatColor.RESET);
+        hiderTeam.setPrefix(message("HIDER_TEAM_NAME") + " " + ChatColor.RESET);
+        seekerTeam.setPrefix(message("SEEKER_TEAM_NAME") + " " + ChatColor.RESET);
     }
 
     public void setLine(String key, String message) {
@@ -447,7 +450,6 @@ class CustomBoard {
         board.resetScores(line.getMessage());
         line.setMessage(message);
         Score newScore = obj.getScore(message);
-
         newScore.setScore(line.getScore());
     }
 
