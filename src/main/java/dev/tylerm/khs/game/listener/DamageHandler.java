@@ -2,6 +2,8 @@ package dev.tylerm.khs.game.listener;
 
 import com.cryptomorin.xseries.XSound;
 import dev.tylerm.khs.Main;
+import dev.tylerm.khs.event.DamagedByWindChargeEvent;
+import dev.tylerm.khs.event.HitByBeeBirdEvent;
 import dev.tylerm.khs.event.PlayerKillEvent;
 import dev.tylerm.khs.game.Board;
 import dev.tylerm.khs.game.Game;
@@ -35,24 +37,30 @@ public class DamageHandler implements Listener {
         var hitEntity = event.getHitEntity();
         var hitBlock = event.getHitBlock();
 
-        if(hitBlock != null && directEntity.hasMetadata(CustomItems.OWL_BOW_METADATA_KEY)){
-            new SpecialArrowTaunt(hitBlock.getLocation().add(0,1,0), 32).runTaskTimer(Main.getInstance(), 0L, 5L);
+        if (hitBlock != null && directEntity.hasMetadata(CustomItems.OWL_BOW_METADATA_KEY)) {
+            new SpecialArrowTaunt(hitBlock.getLocation().add(0, 1, 0), 32).runTaskTimer(Main.getInstance(), 0L, 5L);
             directEntity.remove();
             return;
         }
 
-        if(hitEntity instanceof Player player){
-            if(Main.getInstance().getBoard().isHider(player)){
+        if (hitEntity instanceof Player player) {
+            if (Main.getInstance().getBoard().isHider(player)) { //todo test
                 Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                     player.setArrowsInBody(0);
                 }, 10L);
             }
             if (directEntity instanceof WindCharge) {
-                if (player != directEntity.getShooter() && player.getHealth() > 6.5) {
-                    player.setHealth(player.getHealth() - 6.5);
-                    //todo: test 风弹伤害
-                    return;
-                }
+                directEntity.getNearbyEntities(0.7, 0.7, 0.7).forEach(entity -> {
+                    if (!(entity instanceof Player) || Main.getInstance().getBoard().isSpectator((Player) entity)) {
+                        return;
+                    }
+                    var p = (Player) entity;
+                    if (p != directEntity.getShooter() && p.getHealth() > 6.5) {
+                        p.setHealth(p.getHealth() - 6.5);
+                        Bukkit.getPluginManager().callEvent(new DamagedByWindChargeEvent(p));
+                        //todo: test 风弹伤害
+                    }
+                });
             }
         }
     }
@@ -87,6 +95,7 @@ public class DamageHandler implements Listener {
                         new SpecialArrowTaunt(player.getLocation(), 32)
                                 .runTaskTimer(Main.getInstance(), 0L, 5L);
                         event.setDamage(0);
+                        Bukkit.getPluginManager().callEvent(new HitByBeeBirdEvent(player));
                         return;
                     }
                 }

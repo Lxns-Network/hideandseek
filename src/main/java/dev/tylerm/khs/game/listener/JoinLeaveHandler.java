@@ -35,6 +35,9 @@ public class JoinLeaveHandler implements Listener {
                 return;
             }
             Main.getInstance().getGame().join(event.getPlayer());
+            if(Main.getInstance().getBoard().getPlayers().size() >= lobbyMax){
+                Main.getInstance().getGame().start();
+            }
         } else if (teleportToExit) {
             if (
                     event.getPlayer().getWorld().getName().equals(Main.getInstance().getGame().getCurrentMap().getLobbyName()) ||

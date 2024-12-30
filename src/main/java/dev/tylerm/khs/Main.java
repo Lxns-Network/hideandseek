@@ -213,7 +213,7 @@ public class Main extends JavaPlugin implements Listener {
             var display = ItemStacks.of(
                     Material.WIND_CHARGE,
                     "&b弹弓",
-                    "&f风弹 x4",
+                    "&f风弹 x2",
                     "&a砸中别人会很痛。"
             );
             list.add(new HiderSkill(display, List.of(windCharge)));

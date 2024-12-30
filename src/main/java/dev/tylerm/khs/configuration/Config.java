@@ -70,6 +70,7 @@ public class Config {
             regenHealth;
 
     public static int
+            maxPlayers,
             minPlayers,
             gameLength,
             extendPerKill,
@@ -161,6 +162,7 @@ public class Config {
         //Lobby
         startingSeekerCount = Math.max(1, config.getInt("startingSeekerCount"));
         waitTillNoneLeft = config.getBoolean("waitTillNoneLeft");
+        maxPlayers = config.getInt("maxPlayers");
         minPlayers = Math.max(1 + startingSeekerCount + (waitTillNoneLeft ? 0 : 1), config.getInt("minPlayers"));
         countdown = Math.max(10, config.getInt("lobby.countdown"));
         changeCountdown = Math.max(minPlayers, config.getInt("lobby.changeCountdown"));

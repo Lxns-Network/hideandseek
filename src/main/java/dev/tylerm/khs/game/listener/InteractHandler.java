@@ -84,7 +84,6 @@ public class InteractHandler implements Listener {
         switch (CustomItems.getId(temp)) {
             case CustomItems.BLOCK_CHANGER -> {
                 var game = Main.getInstance().getGame();
-                var selectableBlocks = game.getCurrentMap().getBlockHunt();
                 // find a block
                 var hiders = Main.getInstance().getBoard().getHiders();
                 if (hiders.size() == 1) {
@@ -106,7 +105,7 @@ public class InteractHandler implements Listener {
                 text = TextComponent.fromLegacy(ChatColor.LIGHT_PURPLE + "你现在变成了 ");
                 text.addExtra(new TranslatableComponent(targetDisguise.getMaterial().getBlockTranslationKey()));
                 text.addExtra("!");
-                player.spigot().sendMessage(text); //todo test 换装
+                player.spigot().sendMessage(text);
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2 * 20, 1));
                 selected.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2 * 20, 1));
@@ -145,7 +144,6 @@ public class InteractHandler implements Listener {
                 ));
                 player.sendMessage(ChatColor.RED+"你被加速了，快跑！");
             }
-
         }
     }
 

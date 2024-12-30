@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'dev.tylerm'
-version = '1.8.1a'
+version = '1.8.3a'
 description = 'Hide and Seek Plugin'
 java.sourceCompatibility = JavaVersion.VERSION_21
 

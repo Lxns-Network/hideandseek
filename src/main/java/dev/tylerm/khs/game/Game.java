@@ -24,6 +24,7 @@ import com.cryptomorin.xseries.messages.Titles;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.tylerm.khs.event.GameEndEvent;
+import dev.tylerm.khs.event.GameStartedEvent;
 import dev.tylerm.khs.game.events.Glow;
 import dev.tylerm.khs.game.events.Taunt;
 import dev.tylerm.khs.game.listener.RespawnHandler;
@@ -288,6 +289,7 @@ public class Game {
                             currentMap.getGameSpawn().teleport(player);
                         }
                     });
+                    Bukkit.getPluginManager().callEvent(new GameStartedEvent());
                 } else if (startingTimer == 1) {
                     message = message("START_COUNTDOWN_LAST").addAmount(startingTimer).toString();
                 } else {
